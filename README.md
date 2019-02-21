@@ -2,6 +2,7 @@
 #### Uses multiple django frameworks
 * django-rest-framework 
 * (Many more packages to be included)
+* Template by Colorlib
 
 #### Installation instruction
 * Download the folder

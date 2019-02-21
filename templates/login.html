@@ -23,7 +23,6 @@
                 e.preventDefault();
                 userName = $("#user").val();  //Get value using ID for username and password
                 passWord = $("#pass").val();
-                console.log(userName+":"+passWord);
                 $.ajax({
                     type: "POST",
                     url: "{% url 'auth-login' %}", //"name" in urls.py file
@@ -33,13 +32,13 @@
                     },
                     dataType: "JSON",
                     success: function(data){
-                        console.log(data);
+                        // console.log(data);  To check if token is being returned
                         localStorage.setItem('token', data.token)
                         document.getElementById('disp-button').style.visibility = 'visible'
 
                     },
                     error: function(data, status) {
-                        console.log(data.responseJSON);
+                        console.log(data.responseJSON); //Return error data
                     }, 
                     complete: function(){
                         $("#user").val('');
@@ -59,7 +58,7 @@
                 },
                 success: function(data){
                     var json = JSON.parse(data); //Parse Json data to access
-                    console.log(json[0].fields);
+                    // console.log(json[0].fields);
                     $("#sample-data").text("Hello " + json[0].fields.username)
                 },
                 
