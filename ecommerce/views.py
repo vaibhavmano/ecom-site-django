@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core import serializers #Convert to JSON
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
 from .models import CustomUser 
@@ -39,6 +39,9 @@ def contact(request):
 def loginTemp(request):
     return render(request, 'login.html')
 
+def signupTemp(request):
+    return render(request, 'signup.html')
+
 #Token Issue
 @csrf_exempt
 @api_view(["POST"])
@@ -62,7 +65,9 @@ def login(request):
 @csrf_exempt
 @api_view(["GET"])
 def sample_api(request):
-    data = User.objects.all()
+    getMyToken = request.META['HTTP_AUTHORIZATION']
+    typeToken = getMyToken.split(' ')[1]
+    data = User.objects.filter(auth_token = typeToken)
     data = serializers.serialize('json', data)
     return HttpResponse(data, status=HTTP_200_OK)
 
@@ -70,6 +75,7 @@ def sample_api(request):
 
 
 #SignUp
+#name = api-signup
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
@@ -90,7 +96,8 @@ def signup(request):
     serializer = CustomSerializer(data = data)
     if serializer.is_valid():
         serializer.create(validated_data = data) 
-        return Response (serializer.data)
+        return Response (serializer.data, status=HTTP_200_OK)
+        
     else:
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     

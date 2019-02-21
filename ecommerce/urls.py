@@ -12,8 +12,9 @@ urlpatterns = [
     path('contact/',views.contact, name='contact'),
     path('api/login', views.login, name='auth-login'), #Token generation
     path('login/', views.loginTemp, name='login'), #login form
+    path('signup/', views.signupTemp, name='signup'), #Signup form
     path('api/sampleapi', views.sample_api, name='api-view-data'), #viewing data
-    path('api/signup', views.signup), #Testing SignUp
+    path('api/signup', views.signup, name='api-signup'), #Testing SignUp
     # path('api-token-auth/', obtain_auth_token, name='api-token-auth'), #Testing default token assign
 
 ]

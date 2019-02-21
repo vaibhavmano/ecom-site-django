@@ -4,13 +4,15 @@
     <body>
         <form method="POST" >
             {% csrf_token %}
-            <input type="text" id="user" name="username">
-            <input type="password" id="pass" name="password">
+            <input type="text" id="user" name="username" placeholder="username">
+            <input type="password" id="pass" name="password" placeholder="password">
+            <input type="password" id="pass1" name="password" placeholder="Enter password Again">
+            <input type="checkbox" id="sell" name="seller" >
             <button id="submit-button" type="submit">Submit</button>
         </form>
-        <div id="response-data">Still haven't logged in</div>
+        <!-- <div id="response-data">Still haven't logged in</div>
         <button id="view-button" type="submit">Submit</button>
-        <div id="sample-data">No data</div>
+        <div id="sample-data">No data</div> -->
         <!-- Jquery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
@@ -19,41 +21,47 @@
             $("#submit-button").on("click", function(e){
                 e.preventDefault();
                 userName = $("#user").val();  //Get value using ID for username and password
-                passWord = $("#pass").val();
-                // console.log(userName+":"+passWord);
+                var passWord = 'undefined'
+                if ($('#pass').val() == $('#pass1').val()){
+                    passWord = $('#pass').val()
+                
+                seller = $('#sell').prop('checked');
+                isSeller = 'undefined' //change first letter to Caps - Django Bool
+                if (seller == false){
+                    isSeller = 'False'
+                } else {
+                    isSeller = 'True'
+                }
+                console.log(userName+":"+isSeller);
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'auth-login' %}", //"name" in urls.py file
+                    url: "{% url 'api-signup' %}", //"name" in urls.py file
                     data: {                        // Json object
                         "username": userName,
-                        "password": passWord
+                        "password": passWord,
+                        "isSeller": isSeller,
                     },
                     dataType: "JSON",
-                    success: function(data){
-                        console.log(data.token);
-                        localStorage.setItem('token', data.token)
+                    success: function(data, status){
+                        console.log(status); //Token will be generated at login
+                        if (status == 'success') {
+                            window.location.replace("http://127.0.0.1:8000/login")
+                        }
                     },
                     error: function(data, status) {
                         console.log(data.responseJSON);
-                    } 
+                    },
+                    complete: function() {
+                        $("#user").val('');
+                        $("#pass").val('');
+                    }
                 })
-            })
-            $("#view-button").on("click", function(e){
-                e.preventDefault();
-                $.ajax({
-                type: "GET",
-                url: "{% url 'api-view-data' %}", //"name" in urls.py file
-                headers: {
-                    "Authorization": "Token "+localStorage.getItem('token')
-                },
-                success: function(data){
-                    console.log(data);
-                    $("#sample-data").text(JSON.stringify(data))
-                },
-                
-            })
+            } else {
+                console.log("Doesn't match")
+            }
             })
         })
+        
         </script>
     </body>
 </html>
