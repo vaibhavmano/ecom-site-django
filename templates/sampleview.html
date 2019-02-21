@@ -1,0 +1,29 @@
+<html>
+    {% load static %}
+    <head>sample view</head>
+    <body>
+        <div id="sample-data">Not available</div>
+        <!-- Jquery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajax({
+                type: "GET",
+                url: "{% url 'api-view-data' %}", //"name" in urls.py file
+                headers: {
+                    "Authorization": "Token" + token
+                },
+                dataType: "JSON",
+                success: function(data){
+                    console.log(data);
+                    var stringData = JSON.stringify(data)
+                    $("#response-data").text(stringData)
+                },
+                
+            })
+        })
+
+        </script>
+    </body>
+</html>

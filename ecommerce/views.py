@@ -1,0 +1,96 @@
+from django.shortcuts import render
+from django.core import serializers #Convert to JSON
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from rest_framework.parsers import JSONParser
+from django.contrib.auth.models import User #Default User model
+from .models import CustomUser 
+from .serializers import CustomSerializer, UserSerializer #From serializers.py
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK
+)
+from rest_framework.response import Response
+
+# Create your views here.
+def home(request):
+    return render(request, 'index.html')
+
+def products(request):
+    return render(request, 'product.html')
+
+def cart(request):
+    return render(request, 'cart.html')
+
+def blog(request):
+    return render(request, 'blog.html')
+
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
+def loginTemp(request):
+    return render(request, 'login.html')
+
+#Token Issue
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if username is None or password is None:
+        return Response({'error': 'Please provide both username and password'},
+                        status=HTTP_400_BAD_REQUEST)
+    user = authenticate(username=username, password=password)
+    if not user:
+        return Response({'error': 'Invalid Credentials'},
+                        status=HTTP_404_NOT_FOUND)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key},
+                    status=HTTP_200_OK)
+
+#View data using token
+#name = api-view-data
+@csrf_exempt
+@api_view(["GET"])
+def sample_api(request):
+    data = User.objects.all()
+    data = serializers.serialize('json', data)
+    return HttpResponse(data, status=HTTP_200_OK)
+
+
+
+
+#SignUp
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def signup(request):
+    #Fetch data
+    username = request.data.get("username")
+    password = request.data.get("password")
+    is_seller = request.data.get("isSeller")
+    data = {
+        'user': 
+            {
+                'username': username,
+                'password': password,
+            },
+        'is_seller': is_seller,
+    }
+    #Fetch - Over
+    serializer = CustomSerializer(data = data)
+    if serializer.is_valid():
+        serializer.create(validated_data = data) 
+        return Response (serializer.data)
+    else:
+        return Response(serializer.errors)
+    
