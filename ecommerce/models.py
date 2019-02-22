@@ -3,9 +3,15 @@ from django.contrib.auth.models import User #Default User model
 from django.core.validators import RegexValidator
 
 # Create your models here.
+# Uses email instead of username for validation!
+User.USERNAME_FIELD = 'email'
+User._meta.get_field('email')._unique = True
+User.REQUIRED_FIELDS = ['username']
+
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     is_seller = models.BooleanField(default = False)
+
 
 class ContactInfo(models.Model):
     fullname = models.CharField(max_length = 60)
@@ -15,4 +21,4 @@ class ContactInfo(models.Model):
     message = models.TextField(max_length = 250)
     
     def __str__(self):
-        return self.fullname
+        return '%s - %s' % (self.fullname, self.message)

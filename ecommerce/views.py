@@ -89,6 +89,7 @@ def signup(request):
             {
                 'username': username,
                 'password': password,
+                'email': username,
             },
         'is_seller': is_seller,
     }
