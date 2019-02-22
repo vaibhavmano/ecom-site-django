@@ -56,8 +56,8 @@
 				</span>
 
 				<div class="topbar-child2">
-					<span class="topbar-email" id="email-disp">
-						<a href="{% url 'login' %}" >Hello Anonymous</a>
+					<span class="topbar-email">
+						<a href="{% url 'login' %}" id="email-disp">Hello Anonymous</a>
 					</span>
 
 					<div class="topbar-language rs1-select2">
@@ -67,6 +67,7 @@
 						</select>
 					</div>
 				</div>
+				
 			</div>
 
 			<div class="wrap_header">
@@ -620,6 +621,9 @@
 		}
 	//---------------------Login function
 	 $(document).ready(function(){
+			if (localStorage.getItem('token') == null) {
+				console.log("Nothing found")
+			
 
 		$("#submit-button").on("click", function(e){
 			 e.preventDefault();
@@ -664,6 +668,24 @@
 				 }
 			 })
 		 })
+		} else {
+			$.ajax({
+						 type: "GET",
+						 url: "{% url 'api-view-data' %}", //"name" in urls.py file
+						 headers: {
+							 "Authorization": "Token "+localStorage.getItem('token')
+						 },
+						 success: function(data){
+							 var json = JSON.parse(data); //Parse Json data to access
+							 // console.log(json[0].fields);
+							 $("#email-disp").text("Hello " + json[0].fields.username)
+							 $("#sign-up-icon").attr("href", "#");
+							 document.getElementById('disp-button').style.visibility = 'visible'
+						 },
+			 
+					 })
+			console.log("hit hit hit!")
+			}
 		 
 		 $("#logout-button").on("click", function(e){
 			 e.preventDefault();
