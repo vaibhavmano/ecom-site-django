@@ -204,178 +204,10 @@
 		</div>
 
 		<!-- Header Mobile -->
-		<div class="wrap_header_mobile">
-			<!-- Logo moblie -->
-			<a href="{% url 'home' %}" class="logo-mobile">
-				<img src="{% static 'images/icons/logo.png' %}" alt="IMG-LOGO">
-			</a>
-
-			<!-- Button show menu -->
-			<div class="btn-show-menu">
-				<!-- Header Icon mobile -->
-				<div class="header-icons-mobile">
-					<a href="#" class="header-wrapicon1 dis-block">
-						<img src="{% static 'images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
-					</a>
-
-					<span class="linedivide2"></span>
-
-					<div class="header-wrapicon2">
-						<img src="{% static 'images/icons/icon-header-02.png' %}" class="header-icon1 js-show-header-dropdown" alt="ICON">
-						<span class="header-icons-noti">0</span>
-
-						<!-- Header cart noti -->
-						<div class="header-cart header-dropdown">
-							<ul class="header-cart-wrapitem">
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-01.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x &#8377;19.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-02.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Converse All Star Hi Black Canvas
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x &#8377;39.00
-										</span>
-									</div>
-								</li>
-
-								<li class="header-cart-item">
-									<div class="header-cart-item-img">
-										<img src="{% static 'images/item-cart-03.jpg' %}" alt="IMG">
-									</div>
-
-									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
-											Nixon Porter Leather Watch In Tan
-										</a>
-
-										<span class="header-cart-item-info">
-											1 x &#8377;17.00
-										</span>
-									</div>
-								</li>
-							</ul>
-
-							<div class="header-cart-total">
-								Total: &#8377;75.00
-							</div>
-
-							<div class="header-cart-buttons">
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="{% url 'cart' %}" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										View Cart
-									</a>
-								</div>
-
-								<div class="header-cart-wrapbtn">
-									<!-- Button -->
-									<a href="#" class="flex-c-m size1 bg1 bo-rad-20 hov1 s-text1 trans-0-4">
-										Check Out
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="btn-show-menu-mobile hamburger hamburger--squeeze">
-					<span class="hamburger-box">
-						<span class="hamburger-inner"></span>
-					</span>
-				</div>
-			</div>
-		</div>
+		<!-- deleted -->
 
 		<!-- Menu Mobile -->
-		<div class="wrap-side-menu" >
-			<nav class="side-menu">
-				<ul class="main-menu">
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
-						<span class="topbar-child1">
-							Free shipping for standard order over &#8377;100
-						</span>
-					</li>
-
-					<li class="item-topbar-mobile p-l-20 p-t-8 p-b-8">
-						<div class="topbar-child2-mobile">
-							<span class="topbar-email">
-								fashe@example.com
-							</span>
-
-							<div class="topbar-language rs1-select2">
-								<select class="selection-1" name="time">
-									<option>USD</option>
-									<option>EUR</option>
-								</select>
-							</div>
-						</div>
-					</li>
-
-					<li class="item-topbar-mobile p-l-10">
-						<div class="topbar-social-mobile">
-							<a href="#" class="topbar-social-item fa fa-facebook"></a>
-							<a href="#" class="topbar-social-item fa fa-instagram"></a>
-							<a href="#" class="topbar-social-item fa fa-pinterest-p"></a>
-							<a href="#" class="topbar-social-item fa fa-snapchat-ghost"></a>
-							<a href="#" class="topbar-social-item fa fa-youtube-play"></a>
-						</div>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="index.html">Home</a>
-						<ul class="sub-menu">
-							<li><a href="{% url 'home' %}">Homepage V1</a></li>
-						</ul>
-						<i class="arrow-main-menu fa fa-angle-right" aria-hidden="true"></i>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'products' %}">Shop</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'products' %}">Sale</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'cart' %}">Features</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'blog' %}">Blog</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'about' %}">About</a>
-					</li>
-
-					<li class="item-menu-mobile">
-						<a href="{% url 'contact' %}">Contact</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
+		<!-- deleted -->
 	</header>
     {% block content %}
     
@@ -606,102 +438,98 @@
 <!--===============================================================================================-->
 	<script src="{% static 'js/main.js' %}"></script>
 	 <!-- Jquery library -->
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-	 <script type="text/javascript">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+	<script type="text/javascript">
 	//  Functions for add item to cart and remove item from cart
-	 function removeCartItem() {
+	function removeCartItem() {
 			$(".header-cart-item-img").closest("li").first().remove();
 			// var elem = document.getElementsByClassName("header-cart-item-img");
 			// elem.parentNode.parentNode.removeChild(elem);
 			console.log("clicked")
 		}
-	 function addItemCart() {
+	function addItemCart() {
 			$("#add-item-cart").append("<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>White Shirt With Pleat Detail Back</a><span class=header-cart-item-info>1 x &#8377;19.00</span></div></li>")
 		}
 	//---------------------Login function
-	 $(document).ready(function(){
-			if (localStorage.getItem('token') == null) {
-				console.log("Nothing found")
-			
-
-		$("#submit-button").on("click", function(e){
-			 e.preventDefault();
-			 userName = $("#user").val();  //Get value using ID for username and password
-			 passWord = $("#pass").val();
-			 $.ajax({
-				 type: "POST",
-				 url: "{% url 'auth-login' %}", //"name" in urls.py file
-				 data: {                        // Json object
-					 "username": userName,
-					 "password": passWord
-				 },
-				 dataType: "JSON",
-				 success: function(data){
-					 // console.log(data);  To check if token is being returned
-					 localStorage.setItem('token', data.token)
-					 document.getElementById('disp-button').style.visibility = 'visible'
-					 // start-------
-					 $.ajax({
-						 type: "GET",
-						 url: "{% url 'api-view-data' %}", //"name" in urls.py file
-						 headers: {
-							 "Authorization": "Token "+localStorage.getItem('token')
-						 },
-						 success: function(data){
-							 var json = JSON.parse(data); //Parse Json data to access
-							 // console.log(json[0].fields);
-							 $("#email-disp").text("Hello " + json[0].fields.username)
-							 $("#sign-up-icon").attr("href", "#");
-						 },
-			 
+	$(document).ready(function(){
+		if (localStorage.getItem('token') == null) {
+			console.log("Nothing found")
+			$("#submit-button").on("click", function(e){
+				e.preventDefault();
+			 	userName = $("#user").val();  //Get value using ID for username and password
+			 	passWord = $("#pass").val();
+			 	$.ajax({
+					type: "POST",
+				 	url: "{% url 'auth-login' %}", //"name" in urls.py file
+				 	data: {                        // Json object
+						"username": userName,
+						"password": passWord
+				 	},
+				 	dataType: "JSON",
+				 	success: function(data){
+						 // console.log(data);  To check if token is being returned
+					 	localStorage.setItem('token', data.token)
+					 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	// start-------
+					 	$.ajax({
+							type: "GET",
+						 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+						 	headers: {
+								"Authorization": "Token "+localStorage.getItem('token')
+						 	},
+						 	success: function(data){
+								var json = JSON.parse(data); //Parse Json data to access
+							 	// console.log(json[0].fields);
+							 	$("#email-disp").text("Hello " + json[0].fields.username)
+							 	$("#sign-up-icon").attr("href", "#");
+						 	},
 					 })
 					 // End-----------------------
-				 },
-				 error: function(data, status) {
-					 console.log(data.responseJSON); //Return error data
-					 alert("Invalid Credentials!")
-				 }, 
-				 complete: function(){
-					 $("#user").val('');
-					 $("#pass").val('');
-				 }
-			 })
-		 })
-		} else {
-			$.ajax({
-						 type: "GET",
-						 url: "{% url 'api-view-data' %}", //"name" in urls.py file
-						 headers: {
-							 "Authorization": "Token "+localStorage.getItem('token')
-						 },
-						 success: function(data){
-							 var json = JSON.parse(data); //Parse Json data to access
-							 // console.log(json[0].fields);
-							 $("#email-disp").text("Hello " + json[0].fields.username)
-							 $("#sign-up-icon").attr("href", "#");
-							 document.getElementById('disp-button').style.visibility = 'visible'
-						 },
-			 
-					 })
-			console.log("hit hit hit!")
+				 	},
+				 	error: function(data, status) {
+						console.log(data.responseJSON); //Return error data
+					 	alert("Invalid Credentials!")
+				 	}, 
+				 	complete: function(){
+						$("#user").val('');
+					 	$("#pass").val('');
+				 	}
+			 	})
+		 	})
+			} else {
+				$.ajax({
+					 	type: "GET",
+					 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+					 	headers: {
+							"Authorization": "Token "+localStorage.getItem('token')
+					 	},
+					 	success: function(data){
+							var json = JSON.parse(data); //Parse Json data to access
+						 	// console.log(json[0].fields);
+						 	$("#email-disp").text("Hello " + json[0].fields.username)
+						 	$("#sign-up-icon").attr("href", "#");
+						 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	},
+				 	})
+				console.log("hit hit hit!")
 			}
 		 
-		 $("#logout-button").on("click", function(e){
-			 e.preventDefault();
-			 $.ajax({
-				 success: function(){
-					 localStorage.clear();
-					 document.getElementById('disp-button').style.visibility = 'hidden'
-				 },
-				 complete: function() {
-					 $("#sample-data").text('No data')
-					 window.location.reload("http://127.0.0.1:8000/login")
-				 }
-		 })
-		 })
-	 })
-	 </script>
+		$("#logout-button").on("click", function(e){
+			e.preventDefault();
+			$.ajax({
+				success: function(){
+					localStorage.clear();
+					document.getElementById('disp-button').style.visibility = 'hidden'
+				},
+				complete: function() {
+					$("#sample-data").text('No data')
+					window.location.reload("http://127.0.0.1:8000/login")
+				}
+		})
+		})
+	})
+	</script>
 
 </body>
 </html>
