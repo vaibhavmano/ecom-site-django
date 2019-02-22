@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser
+from .models import CustomUser, ContactInfo
 from rest_framework.response import Response
 
 
@@ -30,7 +30,12 @@ class CustomSerializer(serializers.ModelSerializer):
         user = UserSerializer.create(UserSerializer(), user_data) #create by calling serializer
         custom= CustomUser.objects.update_or_create(user = user, is_seller = validated_data.pop('is_seller')) #Create custom serializer 
         return custom
-        
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactInfo
+        fields = '__all__'
 
 # class CustomSerializer(UserSerializer):
 

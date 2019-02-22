@@ -3,8 +3,8 @@ from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser 
-from .serializers import CustomSerializer, UserSerializer #From serializers.py
+from .models import CustomUser, ContactInfo
+from .serializers import CustomSerializer,ContactSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -33,9 +33,9 @@ def blog(request):
 def about(request):
     return render(request, 'about.html')
 
-def contact(request):
+def contactTemp(request):
     return render(request, 'contact.html')
-
+    
 def loginTemp(request):
     return render(request, 'login.html')
 
@@ -100,4 +100,32 @@ def signup(request):
         
     else:
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+#Contact Info
+#name = api-contact
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def contact(request):
+    # Data fetch
+    fullname = request.data.get("fullname")
+    phonenumber = request.data.get("phone_num")
+    email = request.data.get("email")
+    message = request.data.get("message")
+    data = {
+        'fullname': fullname,
+        'email_address': email,
+        'phone_number': phonenumber,
+        'message': message,
+    }
+    # Call custom serializer
+    serializer = ContactSerializer(data = data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response (serializer.data, status=HTTP_200_OK)
+        # return Response("Completed")
+    else:
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        # return Response("none")
+    
     

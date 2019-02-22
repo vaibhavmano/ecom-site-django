@@ -1,14 +1,42 @@
-<html>
+{% extends 'base.html' %}
     {% load static %}
-    <head>SignUp</head>
-    <body>
-        <form method="POST" >
-            {% csrf_token %}
-            <input type="text" id="user" name="username" placeholder="username">
-            <input type="password" id="pass" name="password" placeholder="password">
-            <input type="password" id="pass1" name="password" placeholder="Enter password Again">
-            <input type="checkbox" id="sell" name="seller" >
-            <button id="submit-button" type="submit">Submit</button>
+    {% block title %} Sign Up {% endblock %}
+    {% block content %}
+    <!-- Title Banner -->
+    <section class="bg-title-page p-t-40 p-b-50 flex-col-c-m" style="background-image: url({% static 'images/heading-pages-06.jpg' %});">
+		<h2 class="l-text2 t-center">
+			Sign Up
+		</h2>
+	</section>
+    <!-- --- -->
+    <section class="bgwhite p-t-66 p-b-60">
+		<div class="container">
+			<div class="row">
+            
+            <div class="col-md-6 p-b-30">
+                <form class ="leave-comment" method="POST" >
+                {% csrf_token %}
+                <div class="bo4 of-hidden size15 m-b-20">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user" name="username" placeholder="Email Address">
+                </div>
+                <div class="bo4 of-hidden size15 m-b-20">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
+                </div>
+                <div class="bo4 of-hidden size15 m-b-20">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass1" name="password" placeholder="Enter password again">
+                </div>
+                <div class="bo4 of-hidden size15 m-b-20">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="checkbox" id="sell" name="seller"><label for="sell">Check if seller</label>
+                </div>
+                <button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="signup-button" type="submit">
+                SignUp
+                </button>
+            </div>
+            <!-- <input type="text" id="user" name="username" placeholder="username">
+            <input type="password" id="pass" name="password" placeholder="password"> -->
+            <!-- <input type="password" id="pass1" name="password" placeholder="Enter password Again"> -->
+            <!-- <input type="checkbox" id="sell" name="seller" > -->
+            <!-- <button id="submit-button" type="submit">Submit</button> -->
         </form>
         <!-- <div id="response-data">Still haven't logged in</div>
         <button id="view-button" type="submit">Submit</button>
@@ -16,11 +44,15 @@
         <!-- Jquery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script src="{% static 'js/emailvalidate.js' %}"></script>
         <script type="text/javascript">
         $(document).ready(function(){
-            $("#submit-button").on("click", function(e){
+            $("#signup-button").on("click", function(e){
                 e.preventDefault();
                 userName = $("#user").val();  //Get value using ID for username and password
+                var tf = ValidateEmail(userName);
+                if (tf == true) {
+                console.log('tf');
                 var passWord = 'undefined'
                 if ($('#pass').val() == $('#pass1').val()){
                     passWord = $('#pass').val()
@@ -57,11 +89,16 @@
                     }
                 })
             } else {
-                console.log("Doesn't match")
+                alert("Passwords don't match!")
             }
+        } else {
+            console.log("Enter valid email")
+        }
             })
         })
         
         </script>
-    </body>
-</html>
+    </div>
+    </div>
+    </section>
+    {% endblock %}

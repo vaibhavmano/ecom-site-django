@@ -27,22 +27,22 @@
 						</h4>
 
 						<div class="bo4 of-hidden size15 m-b-20">
-							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" name="name" placeholder="Full Name">
+							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="fullname" name="name" placeholder="Full Name">
 						</div>
 
 						<div class="bo4 of-hidden size15 m-b-20">
-							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" name="phone-number" placeholder="Phone Number">
+							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="phone_num" name="phone-number" placeholder="Phone Number">
 						</div>
 
 						<div class="bo4 of-hidden size15 m-b-20">
-							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" name="email" placeholder="Email Address">
+							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="email" name="email" placeholder="Email Address">
 						</div>
 
-						<textarea class="dis-block s-text7 size20 bo4 p-l-22 p-r-22 p-t-13 m-b-20" name="message" placeholder="Message"></textarea>
+						<textarea class="dis-block s-text7 size20 bo4 p-l-22 p-r-22 p-t-13 m-b-20" id="message" name="message" placeholder="Message"></textarea>
 
 						<div class="w-size25">
 							<!-- Button -->
-							<button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4">
+							<button type="submit" id="submit-contact" class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4">
 								Send
 							</button>
 						</div>
@@ -50,5 +50,44 @@
 				</div>
 			</div>
 		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $("#submit-contact").on("click", function(e){
+                e.preventDefault();
+                fullName = $("#fullname").val();  //Get value using ID 
+				phone_num = $("#phone_num").val();
+				email =$("#email").val();
+				message = $("#message").val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'api-contact' %}", //"name" in urls.py file
+                    data: {                        // Json object
+                        "fullname": fullName,
+                        "phone_num": phone_num,
+						"email": email,
+						"message": message,
+                    },
+                    dataType: "JSON",
+                    success: function(data, status){
+						console.log(data); 
+						alert("Thank You! We'll get back to you soon!")
+                    },
+                    error: function(data, status) {
+                        console.log(data.responseJSON);
+                    },
+                    complete: function() {
+                        $("#fullname").val("");  //Reset value using ID 
+						$("#phone_num").val("");
+						$("#email").val("");
+						$("#message").val("");
+                    }
+                })
+            })
+        })
+        
+        </script>
 	</section>
+
 {% endblock %}

@@ -56,8 +56,8 @@
 				</span>
 
 				<div class="topbar-child2">
-					<span class="topbar-email">
-						fashe@example.com
+					<span class="topbar-email" id="email-disp">
+						<a href="{% url 'login' %}" >Hello Anonymous</a>
 					</span>
 
 					<div class="topbar-language rs1-select2">
@@ -81,11 +81,6 @@
 						<ul class="main_menu">
 							<li>
 								<a href="{% url 'home' %}">Home</a>
-								<!-- <ul class="sub_menu">
-									<li><a href="index.html">Homepage V1</a></li>
-									<li><a href="home-02.html">Homepage V2</a></li>
-									<li><a href="home-03.html">Homepage V3</a></li>
-								</ul> -->
 							</li>
 
 							<li>
@@ -117,7 +112,7 @@
 
 				<!-- Header Icon -->
 				<div class="header-icons">
-					<a href="#" class="header-wrapicon1 dis-block">
+					<a href="{% url 'signup' %}" class="header-wrapicon1 dis-block" id="sign-up-icon">
 						<img src="{% static 'images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
 					</a>
 
@@ -129,14 +124,15 @@
 
 						<!-- Header cart noti -->
 						<div class="header-cart header-dropdown">
-							<ul class="header-cart-wrapitem">
+							<ul class="header-cart-wrapitem" id="add-item-cart">
+								<!--  -->
 								<li class="header-cart-item">
-									<div class="header-cart-item-img">
+									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-01.jpg' %}" alt="IMG">
 									</div>
 
 									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
+										<a class="header-cart-item-name">
 											White Shirt With Pleat Detail Back
 										</a>
 
@@ -145,14 +141,15 @@
 										</span>
 									</div>
 								</li>
+								<!--  -->
 
 								<li class="header-cart-item">
-									<div class="header-cart-item-img">
+									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-02.jpg' %}" alt="IMG">
 									</div>
 
 									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
+										<a class="header-cart-item-name">
 											Converse All Star Hi Black Canvas
 										</a>
 
@@ -161,14 +158,14 @@
 										</span>
 									</div>
 								</li>
-
+								<!--  -->
 								<li class="header-cart-item">
-									<div class="header-cart-item-img">
+									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-03.jpg' %}" alt="IMG">
 									</div>
 
 									<div class="header-cart-item-txt">
-										<a href="#" class="header-cart-item-name">
+										<a class="header-cart-item-name">
 											Nixon Porter Leather Watch In Tan
 										</a>
 
@@ -177,6 +174,7 @@
 										</span>
 									</div>
 								</li>
+								<!--  -->
 							</ul>
 
 							<div class="header-cart-total">
@@ -606,6 +604,82 @@
 
 <!--===============================================================================================-->
 	<script src="{% static 'js/main.js' %}"></script>
+	 <!-- Jquery library -->
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+	 <script type="text/javascript">
+	//  Functions for add item to cart and remove item from cart
+	 function removeCartItem() {
+			$(".header-cart-item-img").closest("li").first().remove();
+			// var elem = document.getElementsByClassName("header-cart-item-img");
+			// elem.parentNode.parentNode.removeChild(elem);
+			console.log("clicked")
+		}
+	 function addItemCart() {
+			$("#add-item-cart").append("<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>White Shirt With Pleat Detail Back</a><span class=header-cart-item-info>1 x &#8377;19.00</span></div></li>")
+		}
+	//---------------------Login function
+	 $(document).ready(function(){
+
+		$("#submit-button").on("click", function(e){
+			 e.preventDefault();
+			 userName = $("#user").val();  //Get value using ID for username and password
+			 passWord = $("#pass").val();
+			 $.ajax({
+				 type: "POST",
+				 url: "{% url 'auth-login' %}", //"name" in urls.py file
+				 data: {                        // Json object
+					 "username": userName,
+					 "password": passWord
+				 },
+				 dataType: "JSON",
+				 success: function(data){
+					 // console.log(data);  To check if token is being returned
+					 localStorage.setItem('token', data.token)
+					 document.getElementById('disp-button').style.visibility = 'visible'
+					 // start-------
+					 $.ajax({
+						 type: "GET",
+						 url: "{% url 'api-view-data' %}", //"name" in urls.py file
+						 headers: {
+							 "Authorization": "Token "+localStorage.getItem('token')
+						 },
+						 success: function(data){
+							 var json = JSON.parse(data); //Parse Json data to access
+							 // console.log(json[0].fields);
+							 $("#email-disp").text("Hello " + json[0].fields.username)
+							 $("#sign-up-icon").attr("href", "#");
+						 },
+			 
+					 })
+					 // End-----------------------
+				 },
+				 error: function(data, status) {
+					 console.log(data.responseJSON); //Return error data
+					 alert("Invalid Credentials!")
+				 }, 
+				 complete: function(){
+					 $("#user").val('');
+					 $("#pass").val('');
+				 }
+			 })
+		 })
+		 
+		 $("#logout-button").on("click", function(e){
+			 e.preventDefault();
+			 $.ajax({
+				 success: function(){
+					 localStorage.clear();
+					 document.getElementById('disp-button').style.visibility = 'hidden'
+				 },
+				 complete: function() {
+					 $("#sample-data").text('No data')
+					 window.location.reload("http://127.0.0.1:8000/login")
+				 }
+		 })
+		 })
+	 })
+	 </script>
 
 </body>
 </html>
