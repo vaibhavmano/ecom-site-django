@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, ContactInfo
+from .models import CustomUser, ContactInfo, CustomSeller
 from rest_framework.response import Response
 
 
@@ -17,18 +17,35 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 
+#User/Customer
 class CustomSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(required = True)  #Serialize user
 
     class Meta:
         model = CustomUser
-        fields = ('user', 'is_seller',)
+        fields = ('user','first_name', 'phone_number')
 
     def create(self, validated_data):
         user_data = validated_data.pop('user') #Pop user into user_data
         user = UserSerializer.create(UserSerializer(), user_data) #create by calling serializer
-        custom= CustomUser.objects.update_or_create(user = user, is_seller = validated_data.pop('is_seller')) #Create custom serializer 
+        custom= CustomUser.objects.update_or_create(user = user, first_name = validated_data.pop('first_name'), phone_number = validated_data.pop('phone_number')) #Create custom serializer 
+        return custom
+
+
+# Seller/Merchant
+class SellerSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer(required = True)  #Serialize user
+
+    class Meta:
+        model = CustomSeller
+        fields = ('user','company_name', 'phone_number', 'company_address')
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user') #Pop user into user_data
+        user = UserSerializer.create(UserSerializer(), user_data) #create by calling serializer
+        custom= CustomSeller.objects.update_or_create(user = user, company_name = validated_data.pop('company_name'), phone_number = validated_data.pop('phone_number'), company_address = validated_data.pop('company_address') ) #Create custom serializer 
         return custom
 
 
@@ -37,8 +54,3 @@ class ContactSerializer(serializers.ModelSerializer):
         model = ContactInfo
         fields = '__all__'
 
-# class CustomSerializer(UserSerializer):
-
-#     class Meta:
-#         model = CustomUser
-#         fields = ('username','password', 'is_seller')

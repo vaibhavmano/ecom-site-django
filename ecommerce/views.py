@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRe
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
 from .models import CustomUser, ContactInfo
-from .serializers import CustomSerializer,ContactSerializer, UserSerializer #From serializers.py
+from .serializers import CustomSerializer,ContactSerializer, SellerSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -21,26 +21,44 @@ from rest_framework.response import Response
 def home(request):
     return render(request, 'index.html')
 
+#Customer
 def products(request):
     return render(request, 'product.html')
 
+#Customer
 def cart(request):
     return render(request, 'cart.html')
 
+#Customer
 def blog(request):
     return render(request, 'blog.html')
+
+
+#Customer    
+def loginTemp(request):
+    return render(request, 'login.html')
+
+#Customer
+def signupTemp(request):
+    return render(request, 'signup.html')
+
+#Seller
+def sellerLoginTemp(request):
+    return render(request, 'seller.html')
+
+#Seller
+def sellerSignupTemp(request):
+    return render(request, 'sellersignup.html')
+
+
 
 def about(request):
     return render(request, 'about.html')
 
 def contactTemp(request):
     return render(request, 'contact.html')
-    
-def loginTemp(request):
-    return render(request, 'login.html')
 
-def signupTemp(request):
-    return render(request, 'signup.html')
+
 
 #Token Issue
 @csrf_exempt
@@ -68,13 +86,16 @@ def sample_api(request):
     getMyToken = request.META['HTTP_AUTHORIZATION']
     typeToken = getMyToken.split(' ')[1]
     data = User.objects.filter(auth_token = typeToken)
-    data = serializers.serialize('json', data)
-    return HttpResponse(data, status=HTTP_200_OK)
+    # getseller = CustomUser.objects.filter(is_seller = "t")
+    getseller = CustomUser.objects.all()
+    getseller = serializers.serialize('json', data)
+    return HttpResponse(getseller, status=HTTP_200_OK)
 
 
 
 
 #SignUp
+#Customer
 #name = api-signup
 @csrf_exempt
 @api_view(["POST"])
@@ -83,7 +104,8 @@ def signup(request):
     #Fetch data
     username = request.data.get("username")
     password = request.data.get("password")
-    is_seller = request.data.get("isSeller")
+    name = request.data.get("firstname")
+    phonenum = request.data.get("phonenum")
     data = {
         'user': 
             {
@@ -91,10 +113,44 @@ def signup(request):
                 'password': password,
                 'email': username,
             },
-        'is_seller': is_seller,
+        'first_name': name,
+        'phone_number': phonenum,
     }
     #Fetch - Over
     serializer = CustomSerializer(data = data)
+    if serializer.is_valid():
+        serializer.create(validated_data = data) 
+        return Response (serializer.data, status=HTTP_200_OK)
+        
+    else:
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+#SignUp
+#Seller/Merchant
+#name = api-sellersignup
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def signupseller(request):
+    #Fetch data
+    companyuser = request.data.get("companyuser") #Email ID of company
+    companyname = request.data.get("companyname")
+    password = request.data.get("password")
+    address = request.data.get("address")
+    phonenum = request.data.get("phonenum")
+    data = {
+        'user': 
+            {
+                'username': companyuser,
+                'password': password,
+                'email': companyuser,
+            },
+        'company_name': companyname,
+        'phone_number': phonenum,
+        'company_address': address,       
+    }
+    #Fetch - Over
+    serializer = SellerSerializer(data = data)
     if serializer.is_valid():
         serializer.create(validated_data = data) 
         return Response (serializer.data, status=HTTP_200_OK)

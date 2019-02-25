@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'seller.html' %}
     {% load static %}
     {% block title %} Sign Up {% endblock %}
     {% block content %}
@@ -17,7 +17,7 @@
                 <form class ="leave-comment" method="POST" >
                 {% csrf_token %}
                 <div class="bo4 of-hidden size15 m-b-20">
-                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user" name="username" placeholder="Email Address">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-user" name="username" placeholder="Email Address of company">
                 </div>
                 <div class="bo4 of-hidden size15 m-b-20">
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
@@ -26,19 +26,20 @@
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass1" name="password" placeholder="Enter password again">
                 </div>
                 <div class="bo4 of-hidden size15 m-b-20">
-                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user-firstname" name="first-name" placeholder="Name">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-name" name="company-name" placeholder="Company Name">
                 </div>
                 <div class="bo4 of-hidden size15 m-b-20">
-                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user-phone-num" name="phone-number" placeholder="Phone Number">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-phone-num" name="company-phone-num" placeholder="Contact Number">
+                </div>
+                <div class="bo4 of-hidden size15 m-b-20">
+                    <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-address" name="company-address" placeholder="Address">
                 </div>
                 <button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="signup-button" type="submit">
                 SignUp
                 </button>
+            </form>
             </div>
-        </form>
-        <!-- <div id="response-data">Still haven't logged in</div>
-        <button id="view-button" type="submit">Submit</button>
-        <div id="sample-data">No data</div> -->
+        
         <!-- Jquery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
@@ -47,29 +48,33 @@
         $(document).ready(function(){
             $("#signup-button").on("click", function(e){
                 e.preventDefault();
-                userName = $("#user").val();  //Get value using ID for username and password
+                userName = $("#company-user").val();  //Get value using ID for username and password
                 var tf = ValidateEmail(userName);
                 if (tf == true) {
                 console.log('tf');
                 var passWord = 'undefined'
                 if ($('#pass').val() == $('#pass1').val()){
                     passWord = $('#pass').val()
-                    firstName = $('#user-firstname').val()
-                    phoneNum = $('#user-phone-num').val()
+                    companyName = $('#company-name').val()
+                    companyPhone = $('#company-phone-num').val()
+                    companyAddr = $('#company-address').val()
+
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'api-signup' %}", //"name" in urls.py file
+                    url: "{% url 'api-sellersignup' %}", //"name" in urls.py file
                     data: {                        // Json object
-                        "username": userName,
+                        "companyuser": userName,
                         "password": passWord,
-                        "firstname": firstName,
-                        "phonenum": phoneNum,
+                        "companyname": companyName,
+                        "address": companyAddr,
+                        "phonenum": companyPhone
+
                     },
                     dataType: "JSON",
                     success: function(data, status){
                         console.log(status); //Token will be generated at login
                         if (status == 'success') {
-                            window.location.replace("http://127.0.0.1:8000/login")
+                            window.location.replace("http://127.0.0.1:8000/seller")
                         }
                     },
                     error: function(data, status) {
@@ -78,6 +83,9 @@
                     complete: function() {
                         $("#user").val('');
                         $("#pass").val('');
+                        $('#company-name').val('')
+                        $('#company-phone-num').val('')
+                        $('#company-address').val('')
                     }
                 })
             } else {

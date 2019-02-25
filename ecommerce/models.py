@@ -10,8 +10,22 @@ User.REQUIRED_FIELDS = ['username']
 
 class CustomUser(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    is_seller = models.BooleanField(default = False)
+    first_name = models.CharField(max_length = 30, default = 'User')
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
 
+    def __str__(self):
+        return self.first_name
+
+class CustomSeller(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    company_name = models.CharField(max_length = 30)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    company_address = models.CharField(max_length = 150)
+
+    def __str__(self):
+        return self.company_name
 
 class ContactInfo(models.Model):
     fullname = models.CharField(max_length = 60)
@@ -22,3 +36,17 @@ class ContactInfo(models.Model):
     
     def __str__(self):
         return '%s - %s' % (self.fullname, self.message)
+
+# SIZES_AVAILABLE = [
+#     ('S', 'S'),
+#     ('XS', 'XS'),
+#     ('M', 'M'),
+#     ('L', 'L'),
+#     ('XL', 'XL'),
+# ]
+
+# class ProductsInfo(models.Model):
+#     nameofprod = models.CharField(max_length = 50)
+#     description = models.CharField(max_length = 150)
+#     size = models.CharField(max_length = 3, choices = SIZES_AVAILABLE)
+

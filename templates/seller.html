@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<title>{% block title %}Welcome, Merchant! {% endblock %} </title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.png' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/themify/themify-icons.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/elegant-font/html-css/style.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/slick/slick.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/lightbox2/css/lightbox.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body class="animsition">
+
+	<!-- Header -->
+	<header class="header1">
+		<!-- Header desktop -->
+		<div class="container-menu-header">
+			<div class="topbar">
+				<div class="topbar-social">
+					<a href="https://www.facebook.com" class="topbar-social-item fa fa-facebook"></a>
+					<a href="https://www.instagram.com" class="topbar-social-item fa fa-instagram"></a>
+					<!-- <a href="https://www.pinterest.com" class="topbar-social-item fa fa-pinterest-p"></a> -->
+					<a href="https://www.snapchat.com" class="topbar-social-item fa fa-snapchat-ghost"></a>
+					<a href="https://www.youtube.com" class="topbar-social-item fa fa-youtube-play"></a>
+				</div>
+
+				
+
+				<div class="topbar-child2">
+					<span class="topbar-email">
+						<a href="{% url 'seller-login' %}" id="email-disp">Hello Anonymous</a>
+					</span>
+
+					
+				</div>
+				
+			</div>
+
+			<div class="wrap_header">
+				<!-- Logo -->
+				<a href="{% url 'home' %}" class="logo">
+					<img src="{% static 'images/icons/logo.png' %}" alt="IMG-LOGO">
+				</a>
+
+				<!-- Menu -->
+				<div class="wrap_menu">
+					<nav class="menu">
+						<ul class="main_menu">
+							<li>
+								<a href="{% url 'seller-login' %}">Home</a>
+							</li>
+
+							<li>
+								<a href="{% url 'seller-signup' %}" id="signup-menu-button">Sign Up</a>
+							</li>
+
+							<li>
+								<a href="#" id="product-reg-menu">Product Registration</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+
+				<!-- Header Icon -->
+				<div class="header-icons">
+					<!-- <a href="#" class="header-wrapicon1 dis-block" id="sign-up-icon">
+						<img src="{% static 'images/icons/icon-header-01.png' %}" class="header-icon1" alt="ICON">
+					</a> -->
+
+					
+
+					
+				</div>
+			</div>
+		</div>
+
+		<!-- Header Mobile -->
+		<!-- deleted -->
+
+		<!-- Menu Mobile -->
+		<!-- deleted -->
+	</header>
+	{% block content %}
+	<section class="bgwhite p-t-66 p-b-60">
+			<div class="container">
+				<div class="row">
+				
+				<div class="col-md-6 p-b-30">
+					<form class ="leave-comment" method="POST" >
+					{% csrf_token %}
+					<div class="bo4 of-hidden size15 m-b-20">
+						<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-user" name="username" placeholder="Email Address of company">
+					</div>
+					<div class="bo4 of-hidden size15 m-b-20">
+						<input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
+					</div>
+					
+					<button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="seller-login-button" type="submit">
+					Login
+					</button>
+					<br>
+					<div id="disp-button" style= "visibility: hidden">
+							<!-- <button id="view-button" type="submit">Click to View data</button>
+							<div id="sample-data">No data</div> -->
+							<button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="logout-button" type="submit">
+								LOGOUT
+							</button>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+	</section>			
+	
+    {% endblock %}
+	<!-- Footer -->
+	<footer class="bg6 p-t-45 p-b-43 p-l-45 p-r-45">
+		<div class="flex-w p-b-90">
+			<div class="w-size6 p-t-30 p-l-15 p-r-15 respon3">
+				<h4 class="s-text12 p-b-30">
+					GET IN TOUCH
+				</h4>
+
+				<div>
+					<p class="s-text7 w-size27">
+						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+					</p>
+
+					<div class="flex-m p-t-30">
+						<a href="https://www.facebook.com" class="fs-18 color1 p-r-20 fa fa-facebook"></a>
+						<a href="https://www.instagram.com" class="fs-18 color1 p-r-20 fa fa-instagram"></a>
+						<!-- <a href="#" class="fs-18 color1 p-r-20 fa fa-pinterest-p"></a> -->
+						<a href="https://www.snapchat.com" class="fs-18 color1 p-r-20 fa fa-snapchat-ghost"></a>
+						<a href="https://www.youtube.com" class="fs-18 color1 p-r-20 fa fa-youtube-play"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="t-center p-l-15 p-r-15">
+			<a href="#">
+				<img class="h-size2" src="{% static 'images/icons/paypal.png' %}" alt="IMG-PAYPAL">
+			</a>
+
+			<a href="#">
+				<img class="h-size2" src="{% static 'images/icons/visa.png' %}" alt="IMG-VISA">
+			</a>
+
+			<a href="#">
+				<img class="h-size2" src="{% static 'images/icons/mastercard.png' %}" alt="IMG-MASTERCARD">
+			</a>
+			<div class="t-center s-text8 p-t-20">
+				Copyright © 2018 All rights reserved. | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+			</div>
+		</div>
+	</footer>
+
+
+
+	<!-- Back to top -->
+	<div class="btn-back-to-top bg0-hov" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="fa fa-angle-double-up" aria-hidden="true"></i>
+		</span>
+	</div>
+
+	<!-- Container Selection1 -->
+	<div id="dropDownSelect1"></div>
+
+
+
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+	<script type="text/javascript" src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/select2/select2.min.js' %}"></script>
+	<script type="text/javascript">
+		$(".selection-1").select2({
+			minimumResultsForSearch: 20,
+			dropdownParent: $('#dropDownSelect1')
+		});
+	</script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/slick/slick.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/slick-custom.js' %}"></script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script type="text/javascript" src="{% static 'vendor/lightbox2/js/lightbox.min.js' %}"></script>
+<!--===============================================================================================-->
+	
+
+<!--===============================================================================================-->
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+	<script type="text/javascript">
+	//---------------------Login function
+	$(document).ready(function(){
+		if (localStorage.getItem('token') == null) {
+			console.log("Nothing found")
+			$("#seller-login-button").on("click", function(e){
+				e.preventDefault();
+			 	userName = $("#company-user").val();  //Get value using ID for username and password
+			 	passWord = $("#pass").val();
+			 	$.ajax({
+					type: "POST",
+				 	url: "{% url 'auth-login' %}", //"name" in urls.py file
+				 	data: {                        // Json object
+						"username": userName,
+						"password": passWord
+				 	},
+				 	dataType: "JSON",
+				 	success: function(data){
+						 // console.log(data);  To check if token is being returned
+					 	localStorage.setItem('token', data.token)
+					 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	// start-------
+					 	$.ajax({
+							type: "GET",
+						 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+						 	headers: {
+								"Authorization": "Token "+localStorage.getItem('token')
+						 	},
+						 	success: function(data){
+								var json = JSON.parse(data); //Parse Json data to access
+							 	console.log(json);
+							 	$("#email-disp").text("Hello " + json[0].fields.username)
+								$("#signup-menu-button").attr("href", "#");
+								$("#product-reg-menu").attr("href", "www.google.com"); 
+						 	},
+					 })
+					 // End-----------------------
+				 	},
+				 	error: function(data, status) {
+						console.log(data.responseJSON); //Return error data
+					 	alert("Invalid Credentials!")
+				 	}, 
+				 	complete: function(){
+						$("#company-user").val('');
+					 	$("#pass").val('');
+				 	}
+			 	})
+		 	})
+			} else {
+				$.ajax({
+					 	type: "GET",
+					 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+					 	headers: {
+							"Authorization": "Token "+localStorage.getItem('token')
+					 	},
+					 	success: function(data){
+							var json = JSON.parse(data); //Parse Json data to access
+						 	// console.log(json[0].fields);
+						 	$("#email-disp").text("Hello " + json[0].fields.username)
+							$("#signup-menu-button").attr("href", "#");
+							$("#product-reg-menu").attr("href", "https://www.google.com/");
+						 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	},
+				 	})
+				console.log("hit hit hit!")
+			}
+		 
+		$("#logout-button").on("click", function(e){
+			e.preventDefault();
+			$.ajax({
+				success: function(){
+					localStorage.clear();
+					document.getElementById('disp-button').style.visibility = 'hidden'
+					$("#product-reg-menu").attr("href", "#");
+				},
+				complete: function() {
+					window.location.reload("http://127.0.0.1:8000/login")
+				}
+		})
+		})
+	})
+	</script>
+
+</body>
+</html>

@@ -480,7 +480,7 @@
 						 	},
 						 	success: function(data){
 								var json = JSON.parse(data); //Parse Json data to access
-							 	// console.log(json[0].fields);
+							 	console.log(json);
 							 	$("#email-disp").text("Hello " + json[0].fields.username)
 							 	$("#sign-up-icon").attr("href", "#");
 						 	},
