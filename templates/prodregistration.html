@@ -54,9 +54,11 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            if(localStorage.getItem('token')== null) {
+            if(localStorage.getItem('token') != null) {
+            document.getElementById('product-reg-menu').style.visibility = 'visible'
             token = localStorage.getItem('token')
-            console.log(token)
+            // console.log(token)
+            $('#signup-menu-button').attr("href", "#")
             $("#prod-submit-button").on("click", function(e){
                 e.preventDefault();
                 prodName = $('#product-name').val();  //Get value using ID for username and password
@@ -65,7 +67,7 @@
                 prodGend = $('#gender').val()
                 prodColors = $('#colors').val()
                 prodCategory = $('#category').val()
-                prodPrice = $('price').val()
+                prodPrice = $('#price').val()
                 
                 $.ajax({
                     type: "POST",
@@ -96,11 +98,12 @@
                         $('#gender').val('')
                         $('#colors').val('')
                         $('#category').val('')
+                        $('#price').val('')
                     }
                 })
             })
         } else {
-			document.getElementById('product-reg-menu').style.visibility = 'visible'
+			document.getElementById('product-reg-menu').style.visibility = 'hidden'
         }
         })
         

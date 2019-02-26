@@ -3,7 +3,7 @@ from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser
+from .models import CustomUser, CustomSeller
 from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
@@ -92,11 +92,15 @@ def login(request):
 def sample_api(request):
     getMyToken = request.META['HTTP_AUTHORIZATION']
     typeToken = getMyToken.split(' ')[1]
-    data = User.objects.filter(auth_token = typeToken) #.values('id')
-    # r = data[0]['id'] #Try using 'if' for classifying between seller and customer
-    # userObj = CustomUser.objects.get(user_id = r)
-    data = serializers.serialize('json', data)
-    return HttpResponse(data, status=HTTP_200_OK)
+    data = User.objects.filter(auth_token = typeToken).values('id')
+    r = data[0]['id'] #Try using 'if' for classifying between seller and customer
+    userObj = CustomUser.objects.filter(user_id = r).values('id')
+    if not userObj:
+        return HttpResponse(None)
+    
+    else:
+        # data = serializers.serialize('json', userObj) #Comment this line while using 'r' variable in this view
+        return HttpResponse(userObj, status=HTTP_200_OK)
 
 
 #SignUp
@@ -185,7 +189,7 @@ def contact(request):
     if serializer.is_valid():
         serializer.save()
         subject = 'Thank you for contacting us!'
-        mailmessage = " We'll get back to you shortly. This is the message you sent us " + message
+        mailmessage = " We'll get back to you shortly. This is the message you sent us '" + message + "'"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ['vai.manohar@gmail.com',]
         send_mail( subject, mailmessage, email_from, recipient_list )
@@ -204,30 +208,39 @@ def contact(request):
 @api_view(["POST"])
 def productreg(request):
     # Data fetch
-    nameofprod = request.data.get("prod_name")
-    desc = request.data.get("prod_desc")
-    size = request.data.get("size")
-    gender = request.data.get("gender")
-    colors = request.data.get("colors")
-    category = request.data.get("category")
-    price = request.data.get("price")
-    data = {
-        'nameofprod': nameofprod,
-        'description': desc,
-        'size': size,
-        'gender': gender,
-        'colors': colors,
-        'category': category,
-        'price':price
-    }
-    # Call serializer
-    serializer = ProductSerializer(data = data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response (serializer.data, status=HTTP_200_OK)
-        # return Response("Completed")
+    getMyToken = request.META['HTTP_AUTHORIZATION']
+    typeToken = getMyToken.split(' ')[1]
+    data = User.objects.filter(auth_token = typeToken).values('id')
+    r = data[0]['id'] #get id of seller
+    sellerobj = CustomSeller.objects.filter(user_id = r).values('id')
+    if not sellerobj:
+        return Response("Not a seller", status = HTTP_404_NOT_FOUND)
     else:
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        # return Response("none")
+        nameofprod = request.data.get("prod_name")
+        desc = request.data.get("prod_desc")
+        size = request.data.get("size")
+        gender = request.data.get("gender")
+        colors = request.data.get("colors")
+        category = request.data.get("category")
+        price = request.data.get("price")
+        data = {
+            'nameofprod': nameofprod,
+            'description': desc,
+            'size': size,
+            'gender': gender,
+            'colors': colors,
+            'category': category,
+            'price':price,
+            'seller': sellerobj[0]['id']
+        }
+    # Call serializer
+        serializer = ProductSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response (serializer.data, status=HTTP_200_OK)
+            # return Response("Completed")
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            # return Response("none")
     
     

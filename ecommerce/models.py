@@ -45,5 +45,6 @@ class ProductsInfo(models.Model):
     colors = models.CharField(max_length = 18, default = "All")
     category = models.CharField(max_length = 10, default = "None")
     price = models.PositiveIntegerField(default = 20)
+    seller = models.ForeignKey(CustomSeller, on_delete = models.CASCADE)
 
 

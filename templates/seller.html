@@ -267,7 +267,8 @@
 				 	}, 
 				 	complete: function(){
 						$("#company-user").val('');
-					 	$("#pass").val('');
+						$("#pass").val('');
+						$('#signup-menu-button').attr("href", "#") 
 				 	}
 				 })
 				}
@@ -276,6 +277,7 @@
 				console.log("hit hit hit")
 				document.getElementById('disp-button').style.visibility = 'visible'
 				document.getElementById('product-reg-menu').style.visibility = 'visible'
+				$('#signup-menu-button').attr("href", "#")
 			}
 		
 		
@@ -286,7 +288,8 @@
 				success: function(){
 					localStorage.clear();
 					document.getElementById('disp-button').style.visibility = 'hidden'
-					document.getElementById('product-reg-menu').style.visibility = 'hidden'  
+					document.getElementById('product-reg-menu').style.visibility = 'hidden'
+					
 				},
 				complete: function() {
 					window.location.reload("http://127.0.0.1:8000/login")

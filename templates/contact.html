@@ -25,15 +25,17 @@
 						<h4 class="m-text26 p-b-36 p-t-15">
 							Send us your message
 						</h4>
-
+						<div id = "errors-name-contact" style="font-size: 12px; color:red;"></div>
 						<div class="bo4 of-hidden size15 m-b-20">
 							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="fullname" name="name" placeholder="Full Name">
 						</div>
 
+						
 						<div class="bo4 of-hidden size15 m-b-20">
 							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="phone_num" name="phone-number" placeholder="Phone Number">
 						</div>
 
+						<div id = "errors-email-contact" style="font-size: 12px; color:red;"></div>
 						<div class="bo4 of-hidden size15 m-b-20">
 							<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="email" name="email" placeholder="Email Address">
 						</div>
@@ -52,14 +54,25 @@
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-        <script type="text/javascript">
+		<script src="{% static 'js/emailvalidate.js' %}"></script>
+		<script type="text/javascript">
         $(document).ready(function(){
             $("#submit-contact").on("click", function(e){
-                e.preventDefault();
+				e.preventDefault();
+				if($("#fullname").val() == "" || $("#email").val() == "") {
+					if($('#fullname').val() == "") {
+						document.getElementById('errors-name-contact').innerHTML = "*Do not leave as empty!"
+					}
+					if($("#phone_num").val() == "") {
+						document.getElementById('errors-email-contact').innerHTML = "*Do not leave as empty!"
+					}
+				}
                 fullName = $("#fullname").val();  //Get value using ID 
 				phone_num = $("#phone_num").val();
 				email =$("#email").val();
+				var tf = ValidateEmail(email);
 				message = $("#message").val();
+				if (tf == true) {
                 $.ajax({
                     type: "POST",
                     url: "{% url 'api-contact' %}", //"name" in urls.py file
@@ -83,7 +96,10 @@
 						$("#email").val("");
 						$("#message").val("");
                     }
-                })
+				})
+			} else {
+				document.getElementById('errors-email-contact').innerHTML = "*Enter valid email!"
+			}
             })
         })
         
