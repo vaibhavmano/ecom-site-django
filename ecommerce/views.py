@@ -1,21 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, ContactInfo
-from .serializers import CustomSerializer,ContactSerializer, SellerSerializer, UserSerializer #From serializers.py
+from .models import CustomUser
+from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
     HTTP_200_OK
 )
 from rest_framework.response import Response
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def home(request):
@@ -49,6 +51,11 @@ def sellerLoginTemp(request):
 #Seller
 def sellerSignupTemp(request):
     return render(request, 'sellersignup.html')
+
+
+#Seller
+def productRegTemp(request):
+    return render(request, 'prodregistration.html')
 
 
 
@@ -85,13 +92,11 @@ def login(request):
 def sample_api(request):
     getMyToken = request.META['HTTP_AUTHORIZATION']
     typeToken = getMyToken.split(' ')[1]
-    data = User.objects.filter(auth_token = typeToken)
-    # getseller = CustomUser.objects.filter(is_seller = "t")
-    getseller = CustomUser.objects.all()
-    getseller = serializers.serialize('json', data)
-    return HttpResponse(getseller, status=HTTP_200_OK)
-
-
+    data = User.objects.filter(auth_token = typeToken) #.values('id')
+    # r = data[0]['id'] #Try using 'if' for classifying between seller and customer
+    # userObj = CustomUser.objects.get(user_id = r)
+    data = serializers.serialize('json', data)
+    return HttpResponse(data, status=HTTP_200_OK)
 
 
 #SignUp
@@ -177,6 +182,46 @@ def contact(request):
     }
     # Call custom serializer
     serializer = ContactSerializer(data = data)
+    if serializer.is_valid():
+        serializer.save()
+        subject = 'Thank you for contacting us!'
+        mailmessage = " We'll get back to you shortly. This is the message you sent us " + message
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['vai.manohar@gmail.com',]
+        send_mail( subject, mailmessage, email_from, recipient_list )
+        return Response (serializer.data, status=HTTP_200_OK)
+        
+        # return Response("Completed")
+    else:
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        # return Response("none")
+
+
+
+#Products Info
+#name = api-productreg
+@csrf_exempt
+@api_view(["POST"])
+def productreg(request):
+    # Data fetch
+    nameofprod = request.data.get("prod_name")
+    desc = request.data.get("prod_desc")
+    size = request.data.get("size")
+    gender = request.data.get("gender")
+    colors = request.data.get("colors")
+    category = request.data.get("category")
+    price = request.data.get("price")
+    data = {
+        'nameofprod': nameofprod,
+        'description': desc,
+        'size': size,
+        'gender': gender,
+        'colors': colors,
+        'category': category,
+        'price':price
+    }
+    # Call serializer
+    serializer = ProductSerializer(data = data)
     if serializer.is_valid():
         serializer.save()
         return Response (serializer.data, status=HTTP_200_OK)

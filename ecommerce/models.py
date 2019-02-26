@@ -37,16 +37,13 @@ class ContactInfo(models.Model):
     def __str__(self):
         return '%s - %s' % (self.fullname, self.message)
 
-# SIZES_AVAILABLE = [
-#     ('S', 'S'),
-#     ('XS', 'XS'),
-#     ('M', 'M'),
-#     ('L', 'L'),
-#     ('XL', 'XL'),
-# ]
+class ProductsInfo(models.Model):
+    nameofprod = models.CharField(max_length = 50)
+    description = models.CharField(max_length = 150)
+    size = models.CharField(max_length = 3)
+    gender = models.CharField(max_length = 6)
+    colors = models.CharField(max_length = 18, default = "All")
+    category = models.CharField(max_length = 10, default = "None")
+    price = models.PositiveIntegerField(default = 20)
 
-# class ProductsInfo(models.Model):
-#     nameofprod = models.CharField(max_length = 50)
-#     description = models.CharField(max_length = 150)
-#     size = models.CharField(max_length = 3, choices = SIZES_AVAILABLE)
 

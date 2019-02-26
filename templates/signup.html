@@ -16,15 +16,19 @@
             <div class="col-md-6 p-b-30">
                 <form class ="leave-comment" method="POST" >
                 {% csrf_token %}
+                <div id = "errors-username-signup" style="font-size: 12px; color:red;"></div>
                 <div class="bo4 of-hidden size15 m-b-20">
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user" name="username" placeholder="Email Address">
                 </div>
+
+                <div id = "errors-password-signup" style="font-size: 12px; color:red;"></div>
                 <div class="bo4 of-hidden size15 m-b-20">
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
                 </div>
                 <div class="bo4 of-hidden size15 m-b-20">
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass1" name="password" placeholder="Enter password again">
                 </div>
+                <div id = "errors-firstname-signup" style="font-size: 12px; color:red;"></div>
                 <div class="bo4 of-hidden size15 m-b-20">
                     <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user-firstname" name="first-name" placeholder="Name">
                 </div>
@@ -47,10 +51,21 @@
         $(document).ready(function(){
             $("#signup-button").on("click", function(e){
                 e.preventDefault();
+                if($("#user").val() == "" || $('#pass').val() =="" || $('#user-firstname').val() =="") {
+                    if($("#user").val() == "") {
+                        document.getElementById('errors-username-signup').innerHTML = "*Do not leave as empty!"
+                    }
+                    if($('#pass').val() == "") {
+                        document.getElementById('errors-password-signup').innerHTML = "*Do not leave as empty!"
+                    }
+                    if($('#user-firstname').val() == "") {
+                        document.getElementById('errors-firstname-signup').innerHTML = "*Do not leave as empty!"
+                    }
+                } else {
                 userName = $("#user").val();  //Get value using ID for username and password
                 var tf = ValidateEmail(userName);
                 if (tf == true) {
-                console.log('tf');
+                // console.log('tf');
                 var passWord = 'undefined'
                 if ($('#pass').val() == $('#pass1').val()){
                     passWord = $('#pass').val()
@@ -81,13 +96,16 @@
                     }
                 })
             } else {
-                alert("Passwords don't match!")
+                // alert("Passwords don't match!")
+                document.getElementById('errors-password-signup').innerHTML = "*Passwords don't match!"
             }
         } else {
-            console.log("Enter valid email")
+            // console.log("Enter valid email")
+            document.getElementById('errors-username-signup').innerHTML = "*Enter valid email!"
         }
-            })
-        })
+        }
+       })
+    })
         
         </script>
     </div>

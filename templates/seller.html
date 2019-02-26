@@ -81,8 +81,8 @@
 								<a href="{% url 'seller-signup' %}" id="signup-menu-button">Sign Up</a>
 							</li>
 
-							<li>
-								<a href="#" id="product-reg-menu">Product Registration</a>
+							<li id ="product-reg-menu" style= "visibility: hidden">
+								<a href="{% url 'productreg' %}">Product Registration</a>
 							</li>
 						</ul>
 					</nav>
@@ -115,13 +115,17 @@
 				<div class="col-md-6 p-b-30">
 					<form class ="leave-comment" method="POST" >
 					{% csrf_token %}
+					<div id = "errors-seller-name-login" style="font-size: 12px; color:red;"></div>
 					<div class="bo4 of-hidden size15 m-b-20">
 						<input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="company-user" name="username" placeholder="Email Address of company">
 					</div>
+
+					<div id = "errors-seller-password-login" style="font-size: 12px; color:red;"></div>
 					<div class="bo4 of-hidden size15 m-b-20">
 						<input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
 					</div>
 					
+					<div id = "errors-seller-form-login" style="font-size: 12px; color:red;"></div>
 					<button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="seller-login-button" type="submit">
 					Login
 					</button>
@@ -228,10 +232,19 @@
 	<script type="text/javascript">
 	//---------------------Login function
 	$(document).ready(function(){
+		// localStorage.clear()
 		if (localStorage.getItem('token') == null) {
 			console.log("Nothing found")
 			$("#seller-login-button").on("click", function(e){
 				e.preventDefault();
+				if ($("#company-user").val() == "" || $("#pass").val() == "") {
+					if ($("#company-user").val() == "") {
+						document.getElementById('errors-seller-name-login').innerHTML = "*Do not leave as empty!"
+					}
+					if ($("#pass").val() == "") {
+						document.getElementById('errors-seller-password-login').innerHTML = "*Do not leave as empty!"
+					}
+				} else {
 			 	userName = $("#company-user").val();  //Get value using ID for username and password
 			 	passWord = $("#pass").val();
 			 	$.ajax({
@@ -245,52 +258,27 @@
 				 	success: function(data){
 						 // console.log(data);  To check if token is being returned
 					 	localStorage.setItem('token', data.token)
-					 	document.getElementById('disp-button').style.visibility = 'visible'
-					 	// start-------
-					 	$.ajax({
-							type: "GET",
-						 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
-						 	headers: {
-								"Authorization": "Token "+localStorage.getItem('token')
-						 	},
-						 	success: function(data){
-								var json = JSON.parse(data); //Parse Json data to access
-							 	console.log(json);
-							 	$("#email-disp").text("Hello " + json[0].fields.username)
-								$("#signup-menu-button").attr("href", "#");
-								$("#product-reg-menu").attr("href", "www.google.com"); 
-						 	},
-					 })
-					 // End-----------------------
+						document.getElementById('disp-button').style.visibility = 'visible'
+						document.getElementById('product-reg-menu').style.visibility = 'visible'
 				 	},
 				 	error: function(data, status) {
-						console.log(data.responseJSON); //Return error data
-					 	alert("Invalid Credentials!")
+						console.log(data.responseJSON.error); //Return error data
+					 	document.getElementById('errors-seller-form-login').innerHTML = "*" + data.responseJSON.error + "!"
 				 	}, 
 				 	complete: function(){
 						$("#company-user").val('');
 					 	$("#pass").val('');
 				 	}
-			 	})
+				 })
+				}
 		 	})
 			} else {
-				$.ajax({
-					 	type: "GET",
-					 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
-					 	headers: {
-							"Authorization": "Token "+localStorage.getItem('token')
-					 	},
-					 	success: function(data){
-							var json = JSON.parse(data); //Parse Json data to access
-						 	// console.log(json[0].fields);
-						 	$("#email-disp").text("Hello " + json[0].fields.username)
-							$("#signup-menu-button").attr("href", "#");
-							$("#product-reg-menu").attr("href", "https://www.google.com/");
-						 	document.getElementById('disp-button').style.visibility = 'visible'
-					 	},
-				 	})
-				console.log("hit hit hit!")
+				console.log("hit hit hit")
+				document.getElementById('disp-button').style.visibility = 'visible'
+				document.getElementById('product-reg-menu').style.visibility = 'visible'
 			}
+		
+		
 		 
 		$("#logout-button").on("click", function(e){
 			e.preventDefault();
@@ -298,7 +286,7 @@
 				success: function(){
 					localStorage.clear();
 					document.getElementById('disp-button').style.visibility = 'hidden'
-					$("#product-reg-menu").attr("href", "#");
+					document.getElementById('product-reg-menu').style.visibility = 'hidden'  
 				},
 				complete: function() {
 					window.location.reload("http://127.0.0.1:8000/login")

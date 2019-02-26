@@ -18,23 +18,120 @@
                 </h4>
         <form class ="leave-comment" method="POST" >
             {% csrf_token %}
+            <div id = "errors-username-login" style="font-size: 12px; color:red;"></div>
             <div class="bo4 of-hidden size15 m-b-20">
                 <input class="sizefull s-text7 p-l-22 p-r-22" type="text" id="user" name="username" placeholder="Username">
             </div>
+            <div id = "errors-password-login" style="font-size: 12px; color:red;"></div>
             <div class="bo4 of-hidden size15 m-b-20">
                 <input class="sizefull s-text7 p-l-22 p-r-22" type="password" id="pass" name="password" placeholder="Password">
             </div>
+            <div id = "errors-form-login" style="font-size: 12px; color:red;"></div>
             <button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="submit-button" type="submit">
                 LOGIN
             </button>
+            <br>
+            <div id="disp-button" style= "visibility: hidden">
+                <button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="logout-button" type="submit">
+                    LOGOUT
+                </button>
+            </div>
         </form>
     </div>
-        <div id="disp-button" style= "visibility: hidden">
-            <button class="flex-c-m size2 bg1 bo-rad-23 hov1 m-text3 trans-0-4" id="logout-button" type="submit">
-                LOGOUT
-            </button>
-        </div>
+        
         </div>
     </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+	<script type="text/javascript">
+	//---------------------Login function
+	$(document).ready(function(){
+		if (localStorage.getItem('token') == null) {
+			console.log("Nothing found")
+			$("#submit-button").on("click", function(e){
+                e.preventDefault();
+                if($("#user").val() == "" || $("#pass").val() == ""){
+                    if($("#user").val() == "") {
+                        document.getElementById('errors-username-login').innerHTML = "*Do not leave as blank!"
+                    }
+                    if($("#pass").val() =="") {
+                        document.getElementById('errors-password-login').innerHTML = "*Do not leave as blank!"
+                    }
+                } else {
+			 	userName = $("#user").val();  //Get value using ID for username and password
+			 	passWord = $("#pass").val();
+			 	$.ajax({
+					type: "POST",
+				 	url: "{% url 'auth-login' %}", //"name" in urls.py file
+				 	data: {                        // Json object
+						"username": userName,
+						"password": passWord
+				 	},
+				 	dataType: "JSON",
+				 	success: function(data){
+						 // console.log(data);  To check if token is being returned
+					 	localStorage.setItem('token', data.token)
+					 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	// start-------
+					 	$.ajax({
+							type: "GET",
+						 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+						 	headers: {
+								"Authorization": "Token "+localStorage.getItem('token')
+						 	},
+						 	success: function(data){
+								var json = JSON.parse(data); //Parse Json data to access
+							 	console.log(json);
+							 	$("#email-disp").text("Hello " + json[0].fields.username)
+							 	$("#sign-up-icon").attr("href", "#");
+						 	},
+					 })
+					 // End-----------------------
+				 	},
+				 	error: function(data, status) {
+                        // console.log(data.responseJSON.error) //Return error data
+                        document.getElementById('errors-form-login').innerHTML = "*" + data.responseJSON.error + "!"
+				 	}, 
+				 	complete: function(){
+						$("#user").val('');
+					 	$("#pass").val('');
+				 	}
+                 })
+                }
+		 	})
+			} else {
+				// localStorage.clear();
+				$.ajax({
+					 	type: "GET",
+					 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
+					 	headers: {
+							"Authorization": "Token "+localStorage.getItem('token')
+					 	},
+					 	success: function(data){
+							var json = JSON.parse(data); //Parse Json data to access
+						 	// console.log(json[0].fields);
+						 	$("#email-disp").text("Hello " + json[0].fields.username)
+						 	$("#sign-up-icon").attr("href", "#");
+						 	document.getElementById('disp-button').style.visibility = 'visible'
+					 	},
+				 	})
+				console.log("hit hit hit!")
+			}
+		 
+		$("#logout-button").on("click", function(e){
+			e.preventDefault();
+			$.ajax({
+				success: function(){
+					localStorage.clear();
+					document.getElementById('disp-button').style.visibility = 'hidden'
+				},
+				complete: function() {
+					$("#sample-data").text('No data')
+					window.location.reload("http://127.0.0.1:8000/login")
+				}
+		})
+		})
+	})
+	</script>
     {% endblock %}
