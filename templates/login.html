@@ -126,6 +126,9 @@
 				success: function(){
 					localStorage.clear();
 					document.getElementById('disp-button').style.visibility = 'hidden'
+					$.ajax({
+						url: "{% url 'empty-cart' %}",
+					})
 				},
 				complete: function() {
 					$("#sample-data").text('No data')
