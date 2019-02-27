@@ -21,6 +21,10 @@ urlpatterns = [
     path('api/sellersignup', views.signupseller, name='api-sellersignup'), #Seller SignUp
     path('seller/productreg/', views.productRegTemp, name='productreg'), #Product registration Template
     path('api/productreg', views.productreg, name='api-productreg'), #Product detail insertion
+    path('api/productdisp', views.productdisp, name='api-productdisp'), #Product display
+    path('api/cartinsert', views.cartinsert, name='api-cartinsert'), #Cart display
+    path('cartempty/', views.cartempty, name='empty-cart'), #Empty cart
+    path('payment/', views.paymentTemp, name='payment'), #Payment page display
     # path('api-token-auth/', obtain_auth_token, name='api-token-auth'), #Testing default token assign
 
 ]

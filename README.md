@@ -4,6 +4,8 @@
 * (Many more packages to be included)
 * Template by Colorlib
 
+Note: Token verification not used for checkout (in progress)
+
 #### Installation instruction
 * Download the folder
 * `cd` to Project directory

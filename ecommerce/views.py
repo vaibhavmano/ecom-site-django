@@ -3,8 +3,8 @@ from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, CustomSeller
-from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, UserSerializer #From serializers.py
+from .models import CustomUser, CustomSeller, ProductsInfo, CartInfo
+from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, CartSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -25,11 +25,13 @@ def home(request):
 
 #Customer
 def products(request):
-    return render(request, 'product.html')
+    disp = ProductsInfo.objects.all()
+    return render(request, 'product.html', {'products': disp})
 
 #Customer
 def cart(request):
-    return render(request, 'cart.html')
+    cartdisp = CartInfo.objects.all()
+    return render(request, 'cart.html', {'cart': cartdisp})
 
 #Customer
 def blog(request):
@@ -44,6 +46,10 @@ def loginTemp(request):
 def signupTemp(request):
     return render(request, 'signup.html')
 
+#Custome
+def paymentTemp(request):
+    return render(request, 'payment.html')
+
 #Seller
 def sellerLoginTemp(request):
     return render(request, 'seller.html')
@@ -57,6 +63,10 @@ def sellerSignupTemp(request):
 def productRegTemp(request):
     return render(request, 'prodregistration.html')
 
+
+def cartempty(request):
+    CartInfo.objects.all().delete()
+    return HttpResponse("Deleted")
 
 
 def about(request):
@@ -92,6 +102,7 @@ def login(request):
 def sample_api(request):
     getMyToken = request.META['HTTP_AUTHORIZATION']
     typeToken = getMyToken.split(' ')[1]
+    # user = request.user #This works if you pass valid token! :D
     data = User.objects.filter(auth_token = typeToken).values('id')
     r = data[0]['id'] #Try using 'if' for classifying between seller and customer
     userObj = CustomUser.objects.filter(user_id = r).values('id')
@@ -101,7 +112,7 @@ def sample_api(request):
     else:
         # data = serializers.serialize('json', userObj) #Comment this line while using 'r' variable in this view
         return HttpResponse(userObj, status=HTTP_200_OK)
-
+    # return HttpResponse(user, status=HTTP_200_OK)
 
 #SignUp
 #Customer
@@ -242,5 +253,34 @@ def productreg(request):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
             # return Response("none")
-    
-    
+
+
+# Get products from database to display
+# name = api-productdisp  
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def productdisp(request):
+    disp = ProductsInfo.objects.all().values('nameofprod', 'price')
+    # data = serializers.serialize('json', disp)
+    return Response(disp)
+
+# Adding to cart
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def cartinsert(request):
+    nameofprod = request.data.get("prod_name")
+    price = request.data.get("price")
+    data = {
+        'nameofprod': nameofprod,
+        'price': price
+    }
+    # Call serializer
+    serializer = CartSerializer(data = data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response (serializer.data, status=HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        

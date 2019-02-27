@@ -17,6 +17,7 @@
 			<div class="container-table-cart pos-relative">
 				<div class="wrap-table-shopping-cart bgwhite">
 					<table class="table-shopping-cart">
+						
 						<tr class="table-head">
 							<th class="column-1"></th>
 							<th class="column-2">Product</th>
@@ -25,14 +26,18 @@
 							<th class="column-5">Total</th>
 						</tr>
 
+						
+
+						<!-- Add items from here -->
+						{% for x in cart %}
 						<tr class="table-row">
 							<td class="column-1">
 								<div class="cart-img-product b-rad-4 o-f-hidden">
 									<img src="{% static 'images/item-10.jpg' %}" alt="IMG-PRODUCT">
 								</div>
 							</td>
-							<td class="column-2">Men Tshirt</td>
-							<td class="column-3">$36.00</td>
+							<td class="column-2">{{ x.nameofprod }}</td>
+							<td class="column-3">&#8377 {{ x.price}}</td>
 							<td class="column-4">
 								<div class="flex-w bo5 of-hidden w-size17">
 									<button class="btn-num-product-down color1 flex-c-m size7 bg8 eff2">
@@ -46,10 +51,12 @@
 									</button>
 								</div>
 							</td>
-							<td class="column-5">$36.00</td>
+							<td class="column-5">&#8377</td>
 						</tr>
+						{% endfor %}
+						<!-- End of 1 item -->
 
-						<tr class="table-row">
+						<!-- <tr class="table-row">
 							<td class="column-1">
 								<div class="cart-img-product b-rad-4 o-f-hidden">
 									<img src="{% static 'images/item-05.jpg' %}" alt="IMG-PRODUCT">
@@ -71,7 +78,8 @@
 								</div>
 							</td>
 							<td class="column-5">$16.00</td>
-						</tr>
+						</tr> -->
+					
 					</table>
 				</div>
 			</div>
@@ -169,12 +177,35 @@
 
 				<div class="size15 trans-0-4">
 					<!-- Button -->
-					<button class="flex-c-m sizefull bg1 bo-rad-23 hov1 s-text1 trans-0-4">
+					<button class="flex-c-m sizefull bg1 bo-rad-23 hov1 s-text1 trans-0-4" id="cart-checkout-button">
 						Proceed to Checkout
 					</button>
 				</div>
 			</div>
 		</div>
 	</section>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#cart-checkout-button').click(function(e){
+			e.preventDefault();
+			$.ajax({
+				type: "GET",
+				url: "{% url 'empty-cart' %}",
+				success: function(data){
+					console.log(data)
+				},
+				error: function(){
+					console.log("Error occured")
+				},
+				complete: function(){
+					window.location = "http://127.0.0.1:8000/payment/"
+				}
+			})
+		})
+	})
+	
+	</script>
 
 {% endblock %}

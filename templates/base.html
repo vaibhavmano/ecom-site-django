@@ -57,7 +57,7 @@
 
 				<div class="topbar-child2">
 					<span class="topbar-email">
-						<a href="{% url 'login' %}" id="email-disp">Hello Anonymous</a>
+						<a href="{% url 'login' %}" id="email-disp">Hello</a>
 					</span>
 
 					<div class="topbar-language rs1-select2">
@@ -127,7 +127,7 @@
 						<div class="header-cart header-dropdown">
 							<ul class="header-cart-wrapitem" id="add-item-cart">
 								<!--  -->
-								<li class="header-cart-item">
+								<!-- <li class="header-cart-item">
 									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-01.jpg' %}" alt="IMG">
 									</div>
@@ -141,10 +141,10 @@
 											1 x &#8377;19.00
 										</span>
 									</div>
-								</li>
+								</li> -->
 								<!--  -->
 
-								<li class="header-cart-item">
+								<!-- <li class="header-cart-item">
 									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-02.jpg' %}" alt="IMG">
 									</div>
@@ -158,9 +158,9 @@
 											1 x &#8377;39.00
 										</span>
 									</div>
-								</li>
+								</li> -->
 								<!--  -->
-								<li class="header-cart-item">
+								<!-- <li class="header-cart-item">
 									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-03.jpg' %}" alt="IMG">
 									</div>
@@ -174,13 +174,13 @@
 											1 x &#8377;17.00
 										</span>
 									</div>
-								</li>
+								</li> -->
 								<!--  -->
 							</ul>
 
-							<div class="header-cart-total">
+							<!-- <div class="header-cart-total">
 								Total: &#8377;75.00
-							</div>
+							</div> -->
 
 							<div class="header-cart-buttons">
 								<!-- <div class="header-cart-wrapbtn"> -->
@@ -421,8 +421,27 @@
 	<script type="text/javascript">
 		$('.block2-btn-addcart').each(function(){
 			var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
+			var priceProduct = $(this).parent().parent().parent().find('.block2-price').html();
 			$(this).on('click', function(){
 				swal(nameProduct, "is added to cart !", "success");
+				// console.log(nameProduct +"="+ priceProduct)
+				$("#add-item-cart").append("<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>"+ nameProduct +"</a><span class=header-cart-item-info> "+ priceProduct +"</span></div></li>")
+				var price = priceProduct.split(" ")
+				console.log(price[1])
+				$.ajax({
+					type: "POST",
+					url: "{% url 'api-cartinsert' %}",
+					data: {
+						"prod_name": nameProduct,
+						"price": Number(price[1])
+					},
+					success: function(data){
+						console.log("Success")
+					},
+					error: function(data) {
+						console.log("Failure")
+					}
+				})
 			});
 		});
 
@@ -443,14 +462,11 @@
 	<script type="text/javascript">
 	//  Functions for add item to cart and remove item from cart
 	function removeCartItem() {
-			$(".header-cart-item-img").closest("li").first().remove();
-			// var elem = document.getElementsByClassName("header-cart-item-img");
-			// elem.parentNode.parentNode.removeChild(elem);
-			console.log("clicked")
-		}
-	function addItemCart() {
-			$("#add-item-cart").append("<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>White Shirt With Pleat Detail Back</a><span class=header-cart-item-info>1 x &#8377;19.00</span></div></li>")
-		}
+		$(".header-cart-item-img").closest("li").first().remove();
+		// var elem = document.getElementsByClassName("header-cart-item-img");
+		// elem.parentNode.parentNode.removeChild(elem);
+		console.log("clicked")
+	}
 	</script>
 
 </body>
