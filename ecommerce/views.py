@@ -18,6 +18,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
+# from sendsms.message import SmsMessage
 
 # Create your views here.
 def home(request):
@@ -76,6 +77,13 @@ def contactTemp(request):
     return render(request, 'contact.html')
 
 
+#Testing SMS
+# @csrf_exempt
+# @api_view(["POST"])
+# @permission_classes((AllowAny,))
+# def sendsms(request):
+#     message = SmsMessage(body='lolcats make me hungry', from_phone='+41791111111', to=['+919487011501'])
+#     message.send()
 
 #Token Issue
 @csrf_exempt
