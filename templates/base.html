@@ -92,9 +92,9 @@
 								<a href="{% url 'products' %}">Sale</a>
 							</li>
 
-							<!-- <li>
-								<a href="{% url 'cart' %}">Features</a>
-							</li> -->
+							<li id="order-display" style="visibility: hidden">
+								<a href="{% url 'orders' %}">Orders</a>
+							</li>
 
 							<!-- <li>
 								<a href="{% url 'blog' %}">Blog</a>
@@ -474,6 +474,7 @@
 	$(document).ready(function(){
 		if (localStorage.getItem('token') != null) {
 			document.getElementById('disp-button').style.visibility = 'visible'
+			document.getElementById('order-display').style.visibility = 'visible'
 			$('#sign-up-icon').attr("href", "#");
 		}
 	})

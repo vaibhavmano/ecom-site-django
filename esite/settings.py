@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ecommerce.apps.EcommerceConfig', #App Registration
     'rest_framework',                 #DRF
     'rest_framework.authtoken',       #DRF
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

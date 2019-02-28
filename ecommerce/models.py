@@ -50,3 +50,7 @@ class ProductsInfo(models.Model):
 class CartInfo(models.Model):
     nameofprod = models.CharField(max_length = 50)
     price = models.PositiveIntegerField(default = 20)
+
+class OrderInfo(models.Model):
+    totalprice = models.PositiveIntegerField(default = 20)
+    customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)

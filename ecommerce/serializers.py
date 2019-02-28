@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, ContactInfo, CustomSeller, ProductsInfo, CartInfo
+from .models import CustomUser, ContactInfo, CustomSeller, ProductsInfo, CartInfo, OrderInfo
 from rest_framework.response import Response
 
 
@@ -63,4 +63,9 @@ class ProductSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartInfo
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderInfo
         fields = '__all__'

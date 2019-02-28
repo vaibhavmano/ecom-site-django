@@ -3,8 +3,8 @@ from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, CustomSeller, ProductsInfo, CartInfo
-from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, CartSerializer, UserSerializer #From serializers.py
+from .models import CustomUser, CustomSeller, ProductsInfo, CartInfo, OrderInfo
+from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, CartSerializer,OrderSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -18,7 +18,15 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
-# from sendsms.message import SmsMessage
+
+# Function to find user
+def findUser(user):
+    data = User.objects.filter(username = user).values('id')
+    r = data[0]['id']
+    userObj = CustomUser.objects.filter(user_id = r).values('id')
+    return userObj
+
+
 
 # Create your views here.
 def home(request):
@@ -35,6 +43,11 @@ def cart(request):
     return render(request, 'cart.html', {'cart': cartdisp})
 
 #Customer
+def orders(request):
+    return render(request, 'orders.html')
+
+
+#Customer
 def blog(request):
     return render(request, 'blog.html')
 
@@ -47,7 +60,7 @@ def loginTemp(request):
 def signupTemp(request):
     return render(request, 'signup.html')
 
-#Custome
+#Customer
 def paymentTemp(request):
     return render(request, 'payment.html')
 
@@ -292,3 +305,42 @@ def cartinsert(request):
     else:
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         
+
+#Add to Order for respective user
+#api-orderinsert
+@csrf_exempt
+@api_view(["POST"])
+def orderinsert(request):
+    user = request.user
+    totalprice = request.data.get("totalprice")
+    data = User.objects.filter(username = user).values('id')
+    r = data[0]['id']
+    userObj = CustomUser.objects.filter(user_id = r).values('id')
+    if not userObj:
+        return HttpResponse("Not Found")
+    else:
+        userObj = userObj[0]['id']
+        data = {
+            'totalprice': totalprice,
+            'customer': userObj
+        }
+        serializer = OrderSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response (serializer.data, status=HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def orderdisp(request):
+    user = request.user
+    userObj = findUser(user)
+    r = userObj[0]['id']
+    if not userObj:
+        return Response("Not valid")
+    else:
+        orderdisp = OrderInfo.objects.filter(customer = r)
+        data = serializers.serialize('json', orderdisp)
+        return HttpResponse(data)

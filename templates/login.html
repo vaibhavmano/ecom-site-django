@@ -73,6 +73,7 @@
 						 // console.log(data);  To check if token is being returned
 					 	localStorage.setItem('token', data.token)
 						document.getElementById('disp-button').style.visibility = 'visible';
+						document.getElementById('order-display').style.visibility = 'visible' ;
 						$("#sign-up-icon").attr("href", "#");
 					 	// start-------
 					 	$.ajax({
@@ -83,7 +84,8 @@
 						 	},
 						 	success: function(data){
 								var json = JSON.parse(data); //Parse Json data to access
-							 	console.log(json);
+								console.log(json);
+								document.getElementById('order-display').style.visibility = 'visible' 
 							 	// $("#email-disp").text("Hello " + json[0].fields.username)
 						 	},
 					 })
@@ -102,6 +104,7 @@
 		 	})
 			} else {
 				// localStorage.clear();
+				document.getElementById('order-display').style.visibility = 'visible' 
 				$.ajax({
 					 	type: "GET",
 					 	url: "{% url 'api-view-data' %}", //"name" in urls.py file
@@ -111,10 +114,10 @@
 					 	success: function(data){
 							var json = JSON.parse(data); //Parse Json data to access
 						 	// console.log(json[0].fields);
-						 	$("#email-disp").text("Hello " + json[0].fields.username)
-						 	$("#sign-up-icon").attr("href", "#");
-							 document.getElementById('disp-button').style.visibility = 'visible'
-							 $('#sign-up-icon').attr("href", "#");
+						 	// $("#email-disp").text("Hello " + json[0].fields.username)
+							document.getElementById('disp-button').style.visibility = 'visible'
+							document.getElementById('order-display').style.visibility = 'visible'
+							$('#sign-up-icon').attr("href", "#");
 					 	},
 				 	})
 				console.log("hit hit hit!")
