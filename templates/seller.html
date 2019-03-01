@@ -84,6 +84,10 @@
 							<li id ="product-reg-menu" style= "visibility: hidden">
 								<a href="{% url 'productreg' %}">Product Registration</a>
 							</li>
+						
+							<li id ="seller-order-view" style= "visibility: hidden">
+								<a href="{% url 'seller-order' %}">View Orders</a>
+							</li>
 						</ul>
 					</nav>
 				</div>
@@ -260,6 +264,7 @@
 					 	localStorage.setItem('token', data.token)
 						document.getElementById('disp-button').style.visibility = 'visible'
 						document.getElementById('product-reg-menu').style.visibility = 'visible'
+						document.getElementById('seller-order-view').style.visibility = 'visible'
 				 	},
 				 	error: function(data, status) {
 						console.log(data.responseJSON.error); //Return error data
@@ -277,6 +282,7 @@
 				console.log("hit hit hit")
 				document.getElementById('disp-button').style.visibility = 'visible'
 				document.getElementById('product-reg-menu').style.visibility = 'visible'
+				document.getElementById('seller-order-view').style.visibility = 'visible'
 				$('#signup-menu-button').attr("href", "#")
 			}
 		
@@ -289,6 +295,7 @@
 					localStorage.clear();
 					document.getElementById('disp-button').style.visibility = 'hidden'
 					document.getElementById('product-reg-menu').style.visibility = 'hidden'
+					document.getElementById('seller-order-view').style.visibility = 'hidden'
 					
 				},
 				complete: function() {

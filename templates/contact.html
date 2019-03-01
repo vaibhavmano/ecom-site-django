@@ -58,6 +58,17 @@
 		<script src="{% static 'js/emailvalidate.js' %}"></script>
 		<script type="text/javascript">
         $(document).ready(function(){
+			//Test
+		// console.log(sessionStorage.getItem('controlVar'))
+		notifynum = sessionStorage.getItem('notify')
+		$('#header-cart-noti').text(notifynum);
+		controlvar = sessionStorage.getItem('controlVar')
+		controlvar = Number(controlvar)
+		for(x = 0; x<=controlvar; x++){
+			cartlist = sessionStorage.getItem('cart'+x)
+			$("#add-item-cart").append(cartlist)
+		}
+		//End
             $("#submit-contact").on("click", function(e){
 				e.preventDefault();
 				if($("#fullname").val() == "" || $("#email").val() == "") {

@@ -199,7 +199,7 @@
 									<a href="product-detail.html" class="block2-name dis-block s-text3 p-b-5">
 										{{ x.nameofprod }}
 									</a>
-
+									<input type="number" id="product-id-reference" style="visibility: hidden" readonly value= "{{ x.seller_id }}">
 									<span class="block2-price m-text6 p-r-5">
 										&#8377; {{ x.price }}
 									</span>
@@ -226,28 +226,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 	<!-- No need of ajax call to display! Using django 'for' -->
 	<script type="text/javascript">
-        // $(document).ready(function(){
-		// 	$.ajax({
-		// 		type: "POST",
-        //             url: "{% url 'api-productdisp' %}", //"name" in urls.py file
-        //             success: function(data){
-		// 				$.each(data, function(k){
-		// 					// console.log(data[k])
-							// $("#prod-row").each(function(k){
-								// console.log(k)
-								// $("#prod-row").append("<div class='col-sm-12 col-md-6 col-lg-4 p-b-50'><!-- Block2 --><div class='block2'><div class='block2-img wrap-pic-w of-hidden pos-relative'><img src='{% static 'images/item-02.jpg' %}' alt='IMG-PRODUCT'><div class='block2-overlay trans-0-4'><a href='#' class='block2-btn-addwishlist hov-pointer trans-0-4'><i class='icon-wishlist icon_heart_alt' aria-hidden='true'></i><i class='icon-wishlist icon_heart dis-none' aria-hidden='true'></i></a><div class='block2-btn-addcart w-size1 trans-0-4'><!-- Button --><button class='flex-c-m size1 bg4 bo-rad-23 hov1 s-text1 trans-0-4' onClick = 'addItemCart()'>Add to Cart</button></div></div></div><div class='block2-txt p-t-20'><a href='product-detail.html' class='block2-name dis-block s-text3 p-b-5'>"+ data[k].nameofprod +"</a><span class='block2-price m-text6 p-r-5'>&#8377;"+ data[k].price +"</span></div></div></div><!-- End of 'one' product -->")
-							// })
-
-		// 				})
-						
-
-		// 				// console.log(data[0].nameofprod); 
-        //             },
-        //             error: function(data, status) {
-        //                 console.log(data.responseJSON);
-        //             }
-		// 	})
-		// })        
+            
 	</script>
 		
 

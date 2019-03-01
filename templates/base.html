@@ -127,6 +127,7 @@
 						<div class="header-cart header-dropdown">
 							<ul class="header-cart-wrapitem" id="add-item-cart">
 								<!--  -->
+								
 								<!-- <li class="header-cart-item">
 									<div class="header-cart-item-img" onClick="removeCartItem()">
 										<img src="{% static 'images/item-cart-01.jpg' %}" alt="IMG">
@@ -134,14 +135,15 @@
 
 									<div class="header-cart-item-txt">
 										<a class="header-cart-item-name">
-											White Shirt With Pleat Detail Back
+											name of prod
 										</a>
 
 										<span class="header-cart-item-info">
-											1 x &#8377;19.00
+											&#8377;19
 										</span>
 									</div>
 								</li> -->
+								
 								<!--  -->
 
 								<!-- <li class="header-cart-item">
@@ -420,26 +422,36 @@
 	<script type="text/javascript" src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
 	<script type="text/javascript">
 	var notify = 0;
+	var x=0;
+		// sessionStorage.clear()
 		$('.block2-btn-addcart').each(function(){
 			var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
 			var priceProduct = $(this).parent().parent().parent().find('.block2-price').html();
+			var sellidProduct = $(this).parent().parent().parent().find('#product-id-reference').val();
 			$(this).on('click', function(){
 				swal(nameProduct, "is added to cart !", "success");
 				// console.log(nameProduct +"="+ priceProduct)
 				$("#add-item-cart").append("<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>"+ nameProduct +"</a><span class=header-cart-item-info> "+ priceProduct +"</span></div></li>")
 				var price = priceProduct.split(" ")
 				console.log(price[1])
+				console.log(x)
+				sessionStorage.setItem('controlVar', x) //Check
+				sessionStorage.setItem('cart'+x, "<li class=header-cart-item><div class=header-cart-item-img onClick=removeCartItem()><img src={% static 'images/item-cart-01.jpg' %} alt=IMG></div><div class=header-cart-item-txt><a class=header-cart-item-name>"+ nameProduct +"</a><span class=header-cart-item-info> "+ priceProduct +"</span></div></li>")
+				x++;  //Check
+				
 				$.ajax({
 					type: "POST",
 					url: "{% url 'api-cartinsert' %}",
 					data: {
 						"prod_name": nameProduct,
-						"price": Number(price[1])
+						"price": Number(price[1]),
+						"seller_id": Number(sellidProduct)
 					},
 					success: function(data){
 						console.log("Success")
 						notify += 1
 						$('#header-cart-noti').text(notify)
+						sessionStorage.setItem('notify', notify)
 					},
 					error: function(data) {
 						console.log("Failure")
@@ -457,8 +469,10 @@
 		//  Functions for add item to cart and remove item from cart
 	function removeCartItem() {
 		$(".header-cart-item-img").closest("li").first().remove();
+		sessionStorage.getItem('notify')
 		notify -=1;
 		$('#header-cart-noti').text(notify);
+		sessionStorage.setItem('notify', notify)
 		// console.log("clicked")
 	}
         

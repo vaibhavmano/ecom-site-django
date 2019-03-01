@@ -20,8 +20,9 @@
                             <table class="table-shopping-cart">
                                 
                                 <tr class="table-head">
-                                    <th class="column-1"></th>
-                                    <th class="column-2">Orders</th>
+                                    <!-- <th class="column-1"></th> -->
+                                    <th class="column-2">S.No</th>
+                                    <th class="column-4">Orders</th>
                                     <th class="column-5">Total Price</th>
                                 </tr>
         
@@ -46,6 +47,17 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>	
 	<script type="text/javascript">
             $(document).ready(function(){
+                //Test
+		// console.log(sessionStorage.getItem('controlVar'))
+		notifynum = sessionStorage.getItem('notify')
+		$('#header-cart-noti').text(notifynum);
+		controlvar = sessionStorage.getItem('controlVar')
+		controlvar = Number(controlvar)
+		for(x = 0; x<=controlvar; x++){
+			cartlist = sessionStorage.getItem('cart'+x)
+			$("#add-item-cart").append(cartlist)
+		}
+		//End
                 if(localStorage.getItem('token') != null){
                     document.getElementById('order-display').style.visibility = 'visible'
                     $.ajax({
@@ -56,10 +68,10 @@
                         },
                         dataType: "JSON",
                         success: function(data){
-                            // console.log(data[0].fields.totalprice)
+                            // console.log(data[0].fields)
                             $.each(data, function(k){
                                 s = k+1;
-                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-1'></td><td class='column-2'>" +s+ "</td><td class='column-5'>&#8377 <span id='quantity-cost'>"+ data[k].fields.totalprice +"</span></td></tr>")
+                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" +s+ "</td><td class='column-4'>" +data[k].fields.products+ "</td><td class='column-5'>&#8377 <span id='quantity-cost'>"+ data[k].fields.totalprice +"</span></td></tr>")
                             })
                         }
                     })

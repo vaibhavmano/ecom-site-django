@@ -1,0 +1,77 @@
+{% extends 'seller.html' %}
+{% block title %} Orders {% endblock %}
+{% block content %}
+{% load static %}
+	<!-- Title Page -->
+	<section class="bg-title-page p-t-50 p-b-40 flex-col-c-m" style="background-image: url({% static 'images/heading-pages-02.jpg' %});">
+		<h2 class="l-text2 t-center">
+			Orders Placed
+        </h2>
+	</section>
+
+
+	<!-- Content page -->
+	<section class="bgwhite p-t-55 p-b-65">
+            <div class="container">
+                    <!-- Cart item -->
+                    <div class="container-table-cart pos-relative">
+                        <div class="wrap-table-shopping-cart bgwhite">
+                            <table class="table-shopping-cart" id="view-order-table">
+                                
+                                <tr class="table-head">
+                                    <!-- <th class="column-1"></th> -->
+                                    <th class="column-2">S.No</th>
+                                    <th class="column-4">Products</th>
+                                    <th class="column-5">Customer</th>
+                                </tr>
+        
+                                
+                                <div class="display-orders">
+                                <!-- Add items from here -->
+                                <!-- <tr class="table-row">
+                                    <td class="column-1">
+                                    </td>
+                                    <td class="column-2">1</td>
+                                    <td class="column-5">&#8377 <span id="quantity-cost">{{ x.totalprice }}</span></td>
+                                </tr> -->
+                                <!-- End of 1 obj -->
+                                </div>
+                            
+                            </table>
+                        </div>
+                    </div>
+                </div>
+    
+                
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            if (localStorage.getItem('token') != null) {
+                // console.log(localStorage.getItem('token'))
+                token = localStorage.getItem('token')
+                console.log(token)
+                document.getElementById('product-reg-menu').style.visibility = 'visible'
+                document.getElementById('seller-order-view').style.visibility = 'visible'
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        "Authorization": "Token " + token
+                    },
+                    url: "{% url 'seller-order-disp' %}",
+                    success: function(data){
+                        newdata = JSON.parse(data)
+                        console.log(newdata)
+                        $.each(newdata, function(k){
+                            // console.log(newdata[k].fields.products)
+                            s=k+1;
+                            $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" + s + "</td><td class='column-4'>" +newdata[k].fields.products+ "</td><td class='column-5'><span id='quantity-cost'>"+ newdata[k].fields.customer +"</span></td></tr>")
+                        })
+                    }
+                })
+            }
+        })
+    
+    </script>
+    </section>
+{% endblock %}

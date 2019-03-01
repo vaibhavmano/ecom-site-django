@@ -47,6 +47,18 @@
 	<script type="text/javascript">
 	//---------------------Login function
 	$(document).ready(function(){
+		//Test
+		// console.log(sessionStorage.getItem('controlVar'))
+		notifynum = sessionStorage.getItem('notify')
+		$('#header-cart-noti').text(notifynum);
+		controlvar = sessionStorage.getItem('controlVar')
+		controlvar = Number(controlvar)
+		for(x = 0; x<=controlvar; x++){
+			cartlist = sessionStorage.getItem('cart'+x)
+			$("#add-item-cart").append(cartlist)
+		}
+		//End
+
 		if (localStorage.getItem('token') == null) {
 			console.log("Nothing found")
 			$("#submit-button").on("click", function(e){
@@ -136,6 +148,7 @@
 				complete: function() {
 					$("#sample-data").text('No data')
 					window.location.reload("http://127.0.0.1:8000/login")
+					sessionStorage.clear()
 				}
 		})
 		})
