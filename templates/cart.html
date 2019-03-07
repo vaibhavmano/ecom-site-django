@@ -147,9 +147,28 @@
 			console.log(totalCost)
 			$('#total-cart-cost').text(totalCost)
 		})
-		}	
-
+		}
 		
+
+		$(".cart-img-product").on('click', function(){
+			nameProduct = $(this).parent().parent().find('.column-2').html()
+			console.log(nameProduct)
+			$.ajax({
+				type: "POST",
+				url: "{% url 'delete-cart' %}",
+				data: {
+					nameofprod: nameProduct
+				},
+				success: function(data){
+					console.log(data)
+					location.reload()
+
+				},
+				error: function(){
+					console.log("Error in deleting")
+				}
+			})
+		})
 	
 
 	$(document).ready(function(){
@@ -160,6 +179,7 @@
 			$('#total-cart-cost').text(totalCost)
 		})
 		
+
 
 		$('#cart-checkout-button').click(function(e){
 			e.preventDefault();

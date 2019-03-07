@@ -81,6 +81,10 @@ def productRegTemp(request):
 def sellerorderTemp(request):
     return render(request, 'sellerorder.html')
 
+#Seller
+def sellerproductTemp(request):
+    return render(request, 'sellerproduct.html')
+
 
 
 def cartempty(request):
@@ -379,7 +383,7 @@ def orderdisp(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sellerorderdisp(request):
     user = request.user
     data = User.objects.filter(username = user).values('id')
@@ -393,7 +397,77 @@ def sellerorderdisp(request):
         data = serializers.serialize('json', sellerorderdisp)
         return HttpResponse(data)
 
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def cartdelete(request):
+    nameofprod = request.data.get("nameofprod")
+    CartInfo.objects.filter(nameofprod = nameofprod).delete()
+    return HttpResponse("completed")
 
+
+@csrf_exempt
+@api_view(["POST"])
+# @permission_classes((AllowAny,))
+def sellerproductdisp(request):
+    user = request.user
+    data = User.objects.filter(username = user).values('id')
+    r = data[0]['id']
+    userObj = CustomSeller.objects.filter(user_id = r).values('id')
+    r = userObj[0]['id']
+    if not userObj:
+        return Response("Not valid")
+    else:
+        sellerproductdisp = ProductsInfo.objects.filter(seller_id = r)
+        data = serializers.serialize('json', sellerproductdisp)
+        return HttpResponse(data)
+
+
+#Products Edit
+@csrf_exempt
+@api_view(["POST"])
+def productedit(request):
+    # Data fetch
+    getMyToken = request.META['HTTP_AUTHORIZATION']
+    typeToken = getMyToken.split(' ')[1]
+    data = User.objects.filter(auth_token = typeToken).values('id')
+    r = data[0]['id'] #get id of seller
+    sellerobj = CustomSeller.objects.filter(user_id = r).values('id')
+    if not sellerobj:
+        return Response("Not a seller", status = HTTP_404_NOT_FOUND)
+    else:
+        prodid = request.data.get("prodid")
+        desc = request.data.get("prodDesc")
+        data = {
+            'description': desc,
+            'seller': sellerobj[0]['id']
+        }
+        prodObj = get_object_or_404(ProductsInfo, id = int(prodid))
+    # Call serializer
+        serializer = ProductSerializer(prodObj, data = data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response (serializer.data, status=HTTP_200_OK)
+            # return Response("Completed")
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            # return Response("none")
+
+#Products Edit
+@csrf_exempt
+@api_view(["POST"])
+def productdelete(request):
+    getMyToken = request.META['HTTP_AUTHORIZATION']
+    typeToken = getMyToken.split(' ')[1]
+    data = User.objects.filter(auth_token = typeToken).values('id')
+    r = data[0]['id'] #get id of seller
+    sellerobj = CustomSeller.objects.filter(user_id = r).values('id')
+    if not sellerobj:
+        return Response("Not a seller", status = HTTP_404_NOT_FOUND)
+    else:
+        prodid = request.data.get("prodid")
+        messagee = ProductsInfo.objects.filter(id = int(prodid), seller_id = r).delete()
+        return Response(messagee)
 
 # @csrf_exempt
 # @api_view(["POST"])

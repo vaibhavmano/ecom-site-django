@@ -56,6 +56,8 @@
         $(document).ready(function(){
             if(localStorage.getItem('token') != null) {
             document.getElementById('product-reg-menu').style.visibility = 'visible'
+            document.getElementById('seller-order-view').style.visibility = 'visible'
+            document.getElementById('seller-product-view').style.visibility = 'visible'
             token = localStorage.getItem('token')
             // console.log(token)
             $('#signup-menu-button').attr("href", "#")

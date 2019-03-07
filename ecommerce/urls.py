@@ -29,7 +29,12 @@ urlpatterns = [
     path('api/orderinsert', views.orderinsert, name='api-orderinsert'), #Insert order with respect to user token
     path('api/orders', views.orderdisp, name='order-disp'), #Order display
     path('seller/orders', views.sellerorderTemp, name='seller-order'), #Order display Template for SELLER
-    path('seller/api/orders', views.sellerorderdisp, name='seller-order-disp'), #Order display Template for SELLER
+    path('seller/api/orders', views.sellerorderdisp, name='seller-order-disp'), #Order display for SELLER
+    path('seller/products', views.sellerproductTemp, name='seller-product'), #Product display Template for SELLER
+    path('seller/api/products', views.sellerproductdisp, name='seller-product-disp'), #Order display for SELLER
+    path('seller/api/productsedit', views.productedit, name='seller-product-edit'), #Order edit for SELLER
+    path('seller/api/productsdelete', views.productdelete, name='seller-product-delete'), #Order edit for SELLER
+    path('api/delete', views.cartdelete, name='delete-cart'), #Delete item from cart
 
     # Test Path ----- Use this path to test for data insertion and retrieval
     # path('api/datatest', views.datatest, name='testing'), #Testing-------
