@@ -128,13 +128,13 @@
 							</ul>
 						</div>
 
-						<div class="search-product pos-relative bo4 of-hidden">
+						<!-- <div class="search-product pos-relative bo4 of-hidden">
 							<input class="s-text7 size6 p-l-23 p-r-50" type="text" name="search-product" placeholder="Search Products...">
 
 							<button class="flex-c-m size5 ab-r-m color2 color0-hov trans-0-4">
 								<i class="fs-12 fa fa-search" aria-hidden="true"></i>
 							</button>
-						</div>
+						</div> -->
 					</div>
 				</div>
 
@@ -165,7 +165,7 @@
 						</div>
 
 						<span class="s-text8 p-t-5 p-b-5">
-							Showing 1–12 of 16 results
+								Page {{ products.number }} of {{ products.paginator.num_pages }}.
 						</span>
 					</div>
 
@@ -215,7 +215,10 @@
 
 					<!-- Pagination -->
 					<div class="pagination flex-m flex-w p-t-26">
-						<a href="#" class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>
+						{% for page in products.paginator.page_range %}
+                            {% if forloop.counter != 1 %} | {% endif %}
+                            <a href="?page={{page}}" class="item-pagination flex-c-m trans-0-4 active-pagination">{{ page }}</a>
+                        {% endfor %}
 						<!-- <a href="#" class="item-pagination flex-c-m trans-0-4">2</a> -->
 					</div>
 				</div>

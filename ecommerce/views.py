@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
@@ -35,6 +36,9 @@ def home(request):
 #Customer
 def products(request):
     disp = ProductsInfo.objects.all()
+    paginator = Paginator(disp, 9)
+    page = request.GET.get('page')
+    disp = paginator.get_page(page)
     return render(request, 'product.html', {'products': disp})
 
 #Customer

@@ -20,7 +20,7 @@
                                 
                                 <tr class="table-head">
                                     <!-- <th class="column-1"></th> -->
-                                    <th class="column-2">ID</th>
+                                    <th class="column-2">Product ID</th>
                                     <th class="column-4">Products</th>
                                     <th class="column-5">Description</th>
                                     <th class="column-6"></th>
@@ -78,6 +78,8 @@
             // console.log('An input is detected')
             var prodid = $(x).parent().find('.column-2').html()
             // console.log(prodid)
+            var answer = confirm("Are you sure you want to delete the item?")
+            if (answer) {
             $.ajax({
                 type: "POST",
                 url: "{% url 'seller-product-delete' %}",
@@ -95,6 +97,9 @@
                     console.log("Error")
                 }
             })
+            } else {
+                console.log("Cancelled")
+            }
         }
         function updateFunction(x) {
             // console.log($(x).parent().parent().find('.column-2').html())
