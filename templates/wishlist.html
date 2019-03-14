@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block title %} Orders {% endblock %}
+{% block title %} Wishlist {% endblock %}
 {% block content %}
 
 {% load static %}
 	<!-- Title Page -->
 	<section class="bg-title-page p-t-50 p-b-40 flex-col-c-m" style="background-image: url({% static 'images/heading-pages-02.jpg' %});">
 		<h2 class="l-text2 t-center">
-			Orders Placed
+            Wishlist
         </h2>
 	</section>
 
@@ -22,8 +22,8 @@
                                 <tr class="table-head">
                                     <!-- <th class="column-1"></th> -->
                                     <th class="column-2">S.No</th>
-                                    <th class="column-4">Orders</th>
-                                    <th class="column-5">Total Price</th>
+                                    <th class="column-4">Products</th>
+                                    <th class="column-5"></th>
                                 </tr>
         
                                 
@@ -49,7 +49,7 @@
         $(document).ready(function(){
         if (sessionStorage.getItem('notify') == null) {
 			$('#header-cart-noti').text("0")
-		} else {
+		} else {          
 		notifynum = sessionStorage.getItem('notify')
 		$('#header-cart-noti').text(notifynum); }
 		controlvar = sessionStorage.getItem('controlVar')
@@ -64,16 +64,16 @@
                     document.getElementById('wishlist-display').style.visibility = 'visible'
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'order-disp' %}",
+                        url: "{% url 'wishlist-disp' %}",
                         headers: {
-                            "Authorization": "Token "+localStorage.getItem('token')
+                            "Authorization": "Token "+localStorage.getItem('token'),
                         },
                         dataType: "JSON",
                         success: function(data){
                             // console.log(data[0].fields)
                             $.each(data, function(k){
                                 s = k+1;
-                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" +s+ "</td><td class='column-4'>" +data[k].fields.products+ "</td><td class='column-5'>&#8377 <span id='quantity-cost'>"+ data[k].fields.totalprice +"</span></td></tr>")
+                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" +s+ "</td><td class='column-4'>" +data[k].fields.products+ "</td><td class='column-5' onclick=deleteFunction(this) style=cursor:pointer>Delete</td></tr>")
                             })
                         }
                     })
@@ -81,6 +81,33 @@
                     console.log("not found")
                 }
             })
+            function deleteFunction(x) {
+            // console.log('An input is detected')
+            var prodname = $(x).parent().find('.column-4').html()
+            console.log(prodname)
+            var answer = confirm("Are you sure you want to delete the item from your wishlist?")
+            if (answer) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'wishlist-delete' %}",
+                headers: {
+                    "Authorization": "Token " + localStorage.getItem('token')
+                },
+                data: {
+                    prodname: prodname,
+                },
+                success: function(data) {
+                    console.log("Completed")
+                    location.reload()
+                },
+                error: function() {
+                    console.log("Error")
+                }
+            })
+            } else {
+                console.log("Cancelled")
+            }
+        }
 	</script>
 		
 

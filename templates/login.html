@@ -58,7 +58,9 @@
 			$("#add-item-cart").append(cartlist)
 		}
 		//End
-
+		if (sessionStorage.getItem('notify') == null) {
+			$('#header-cart-noti').text("0")
+		}
 		if (localStorage.getItem('token') == null) {
 			console.log("Nothing found")
 			$("#submit-button").on("click", function(e){
@@ -129,6 +131,7 @@
 						 	// $("#email-disp").text("Hello " + json[0].fields.username)
 							document.getElementById('disp-button').style.visibility = 'visible'
 							document.getElementById('order-display').style.visibility = 'visible'
+							document.getElementById('wishlist-display').style.visibility = 'visible'
 							$('#sign-up-icon').attr("href", "#");
 					 	},
 				 	})

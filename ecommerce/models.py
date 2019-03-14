@@ -57,8 +57,14 @@ class OrderInfo(models.Model):
     products = models.CharField(max_length = 200)
     customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
 
+class WishlistInfo(models.Model):
+    # totalprice = models.PositiveIntegerField(default = 20)
+    products = models.CharField(max_length = 200)
+    customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
+
 class SellerOrderInfo(models.Model):
     # totalprice = models.PositiveIntegerField(default = 20)
     products = models.CharField(max_length = 200)
     seller = models.ForeignKey(CustomSeller, on_delete = models.CASCADE)
     customer = models.CharField(max_length = 75, default = "Anonymous")
+

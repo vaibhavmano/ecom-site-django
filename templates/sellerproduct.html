@@ -68,7 +68,7 @@
                         $.each(newdata, function(k){
                             // console.log(newdata[k].fields.nameofprod)
                             s=k+1;
-                            $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" + newdata[k].pk + "</td><td class='column-4'>" +newdata[k].fields.nameofprod+ "</td><td class='column-5'><span id='quantity-cost' onfocusout = updateFunction(this) contentEditable=true>"+ newdata[k].fields.description +"</span></td><td class='column-6' onclick=deleteFunction(this) style=cursor:pointer>Delete</td></tr>")
+                            $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" + newdata[k].pk + "</td><td class='column-4'>" +newdata[k].fields.nameofprod+ "</td><td class='column-5'><span id='quantity-cost' onfocusout = updateFunction(this) contentEditable=true style=cursor:context-menu>"+ newdata[k].fields.description +"</span></td><td class='column-6' onclick=deleteFunction(this) style=cursor:pointer>Delete</td></tr>")
                         })
                     }
                 })

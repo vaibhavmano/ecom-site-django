@@ -3,8 +3,8 @@ from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User #Default User model
-from .models import CustomUser, CustomSeller, ProductsInfo, CartInfo, OrderInfo, SellerOrderInfo
-from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, CartSerializer,OrderSerializer, SellerOrderSerializer, UserSerializer #From serializers.py
+from .models import CustomUser, CustomSeller, ProductsInfo, CartInfo, OrderInfo, SellerOrderInfo, WishlistInfo
+from .serializers import CustomSerializer,ContactSerializer, SellerSerializer,ProductSerializer, CartSerializer,OrderSerializer, SellerOrderSerializer, WishSerializer, UserSerializer #From serializers.py
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
@@ -19,6 +19,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Q
 
 # Function to find user
 def findUser(user):
@@ -42,6 +43,59 @@ def products(request):
     return render(request, 'product.html', {'products': disp})
 
 #Customer
+def productsfilter(request, filter_id):
+    if filter_id is "W":
+        disp = ProductsInfo.objects.filter(gender = 'Female')
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+        # return HttpResponse("Women")
+    elif filter_id is "M":
+        disp = ProductsInfo.objects.filter(gender = 'Male')
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 1:
+        disp = ProductsInfo.objects.filter(Q(colors__icontains='blue'))
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 2:
+        disp = ProductsInfo.objects.filter(Q(colors__icontains='red'))
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 3:
+        disp = ProductsInfo.objects.filter(Q(colors__icontains='black'))
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 5:
+        disp = ProductsInfo.objects.filter(price__gte=0, price__lte=50)
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 100:
+        disp = ProductsInfo.objects.filter(price__gte=100, price__lte=200)
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+    elif filter_id is 250:
+        disp = ProductsInfo.objects.filter(price__gte=250)
+        paginator = Paginator(disp, 9)
+        page = request.GET.get('page')
+        disp = paginator.get_page(page)
+        return render(request, 'product.html', {'products': disp})
+
+
+#Customer
 def cart(request):
     cartdisp = CartInfo.objects.all()
     return render(request, 'cart.html', {'cart': cartdisp})
@@ -50,6 +104,9 @@ def cart(request):
 def orders(request):
     return render(request, 'orders.html')
 
+#Customer
+def wishlist(request):
+    return render(request, 'wishlist.html')
 
 #Customer
 def blog(request):
@@ -371,6 +428,31 @@ def orderinsert(request):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
+
+#Add to Wishlist for respective user
+#api-wishinsert
+@csrf_exempt
+@api_view(["POST"])
+def wishinsert(request):
+    user = request.user
+    userObj = findUser(user)
+    if not userObj:
+        return HttpResponse("Not Found")
+    else:
+        cartData = request.data.get("nameofprod")
+        userObj = userObj[0]['id']
+        data = {
+            'products': cartData,
+            'customer': userObj
+        }
+        serializer = WishSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response (serializer.data, status=HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
 @csrf_exempt
 @api_view(["POST"])
 # @permission_classes((AllowAny,))
@@ -387,7 +469,20 @@ def orderdisp(request):
 
 @csrf_exempt
 @api_view(["POST"])
-# @permission_classes((AllowAny,))
+def wishlistdisp(request):
+    user = request.user
+    userObj = findUser(user)
+    r = userObj[0]['id']
+    if not userObj:
+        return Response("Not valid")
+    else:
+        wishdisp = WishlistInfo.objects.filter(customer = r)
+        data = serializers.serialize('json', wishdisp)
+        return HttpResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
 def sellerorderdisp(request):
     user = request.user
     data = User.objects.filter(username = user).values('id')
@@ -457,7 +552,7 @@ def productedit(request):
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
             # return Response("none")
 
-#Products Edit
+#Products Delete
 @csrf_exempt
 @api_view(["POST"])
 def productdelete(request):
@@ -473,10 +568,26 @@ def productdelete(request):
         messagee = ProductsInfo.objects.filter(id = int(prodid), seller_id = r).delete()
         return Response(messagee)
 
-# @csrf_exempt
-# @api_view(["POST"])
-# @permission_classes((AllowAny,))
-# def datatest(request):
-#     user = request.user
-#     hello = "Hello " + str(user)
-#     return HttpResponse(hello)
+
+#Wishlist Delete
+@csrf_exempt
+@api_view(["POST"])
+def wishlistdelete(request):
+    user = request.user
+    userObj = findUser(user)
+    r = userObj[0]['id']
+    if not userObj:
+        return Response("Not a Customer", status = HTTP_404_NOT_FOUND)
+    else:
+        prodname = request.data.get("prodname")
+        messagee = WishlistInfo.objects.filter(products = prodname, customer_id = r).delete()
+        return Response(messagee)
+
+# Testing
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def datatest(request):
+    hi = request.data.get("FilterVar")
+    hello = "Hello " + str(hi)
+    return HttpResponse(hello)

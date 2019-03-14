@@ -57,11 +57,18 @@
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 		<script src="{% static 'js/emailvalidate.js' %}"></script>
 		<script type="text/javascript">
+		
         $(document).ready(function(){
-			//Test
-		// console.log(sessionStorage.getItem('controlVar'))
-		notifynum = sessionStorage.getItem('notify')
-		$('#header-cart-noti').text(notifynum);
+			if(localStorage.getItem('token') != null){
+                    document.getElementById('order-display').style.visibility = 'visible'
+					document.getElementById('wishlist-display').style.visibility = 'visible'
+			}
+			if (sessionStorage.getItem('notify') == null) {
+			$('#header-cart-noti').text("0")
+			} else {
+				notifynum = sessionStorage.getItem('notify')
+				$('#header-cart-noti').text(notifynum); 
+			}
 		controlvar = sessionStorage.getItem('controlVar')
 		controlvar = Number(controlvar)
 		for(x = 0; x<=controlvar; x++){

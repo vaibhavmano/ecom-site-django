@@ -53,6 +53,8 @@
                 console.log(token)
                 document.getElementById('product-reg-menu').style.visibility = 'visible'
                 document.getElementById('seller-order-view').style.visibility = 'visible'
+                document.getElementById('seller-product-view').style.visibility = 'visible'
+                $('#signup-menu-button').attr("href", "#")
                 $.ajax({
                     type: "POST",
                     headers: {
