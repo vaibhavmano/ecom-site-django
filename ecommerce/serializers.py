@@ -10,12 +10,22 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username','email', 'password') #use username instead of email if error
+        fields = ('id', 'username','email', 'password', 'is_active') #use username instead of email if error
     
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data, is_active = False)
         return user
     
+
+# class UserSerializerVerify(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = User
+#         fields = ('id', 'username','email', 'password', 'is_active') #use username instead of email if error
+    
+#     def create(self, validated_data):
+#         user = User.objects.create_user(**validated_data, is_active = True)
+#         return user
 
 #User/Customer
 class CustomSerializer(serializers.ModelSerializer):

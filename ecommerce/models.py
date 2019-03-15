@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User #Default User model
 from django.core.validators import RegexValidator
+import random
+# from djmoney.models.fields import MoneyField
 
 # Create your models here.
 # Uses email instead of username for validation!
@@ -14,8 +16,10 @@ class CustomUser(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
 
+    
     def __str__(self):
         return self.first_name
+
 
 class CustomSeller(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
@@ -52,10 +56,27 @@ class CartInfo(models.Model):
     price = models.PositiveIntegerField(default = 20)
     seller = models.ForeignKey(CustomSeller, on_delete = models.CASCADE) #New
 
+ORDER_STATUS = (
+    ('NOTCNF', 'Not Confirmed'),
+    ('CNFORM', 'Order Confirmed'),
+    ('DSPATC', 'Order Dispatched'),
+    ('DLIVER', 'Order Delivered'),
+)
+
 class OrderInfo(models.Model):
     totalprice = models.PositiveIntegerField(default = 20)
     products = models.CharField(max_length = 200)
     customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
+    orderstatus = models.CharField(default = 'NOTCNF', choices = ORDER_STATUS, max_length = 6)
+    # orderID = models.PositiveIntegerField()
+
+    # def save(self, *args, **kwargs):
+    #     self.orderID = str(random)
+    #     super(OrderInfo, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return '%d - %s' % (self.id, self.orderstatus)
+    
 
 class WishlistInfo(models.Model):
     # totalprice = models.PositiveIntegerField(default = 20)

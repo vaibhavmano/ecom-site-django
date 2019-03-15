@@ -88,6 +88,7 @@
 					 	localStorage.setItem('token', data.token)
 						document.getElementById('disp-button').style.visibility = 'visible';
 						document.getElementById('order-display').style.visibility = 'visible' ;
+						document.getElementById('wishlist-display').style.visibility = 'visible'
 						$("#sign-up-icon").attr("href", "#");
 					 	// start-------
 					 	$.ajax({
@@ -131,7 +132,7 @@
 						 	// $("#email-disp").text("Hello " + json[0].fields.username)
 							document.getElementById('disp-button').style.visibility = 'visible'
 							document.getElementById('order-display').style.visibility = 'visible'
-							document.getElementById('wishlist-display').style.visibility = 'visible'
+							c
 							$('#sign-up-icon').attr("href", "#");
 					 	},
 				 	})

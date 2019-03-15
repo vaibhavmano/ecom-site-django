@@ -407,6 +407,7 @@
 		});
 		// Wihslist insertion
 		$('.block2-btn-addwishlist').each(function(){
+			if(localStorage.getItem('token') != null) {
 			var nameProduct = $(this).parent().parent().parent().find('.block2-name').html();
 			$(this).on('click', function(){
 				swal(nameProduct, "is added to wishlist !", "success");
@@ -427,6 +428,11 @@
 					}
 				})
 			});
+			} else {
+				$(this).on('click', function(){
+					alert("You've not logged in! Item will not be added to wishlist")
+				});
+			}
 		});
 		//  Functions for add item to cart and remove item from cart
 	function removeCartItem() {

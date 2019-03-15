@@ -20,6 +20,7 @@ urlpatterns = [
     path('seller/', views.sellerLoginTemp, name='seller-login'), #Seller login
     path('seller/signup', views.sellerSignupTemp, name='seller-signup'),
     path('signup/', views.signupTemp, name='signup'), #Signup form
+    path('verify/', views.verifyTemp, name='verify'), #Verification template
     path('api/sampleapi', views.sample_api, name='api-view-data'), #viewing data
     path('api/signup', views.signup, name='api-signup'), #Customer SignUp
     path('orders/', views.orders, name='orders'), #Order display
@@ -43,9 +44,12 @@ urlpatterns = [
     path('seller/api/productsdelete', views.productdelete, name='seller-product-delete'), #Order delete for SELLER
     path('api/wishlistdelete', views.wishlistdelete, name='wishlist-delete'), #Wishlist delete for SELLER
     path('api/delete', views.cartdelete, name='delete-cart'), #Delete item from cart
+    path('api/verifyemail', views.verifyemail, name='email-verify'), #Email verification
+    path('api/delemail', views.delemail, name='email-delete'), #Email delete
+    # url(r'activate/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',views.activatemail),
 
     # Test Path ----- Use this path to test for data insertion and retrieval
-    path('api/datatest', views.datatest, name='testing'), #Testing-------
+    # path('api/datatest', views.datatest, name='testing'), #Testing-------
 
     # path('api-token-auth/', obtain_auth_token, name='api-token-auth'), #Testing default token assign
 

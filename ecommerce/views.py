@@ -20,6 +20,8 @@ from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Q
+import random #Random number generator
+import uuid
 
 # Function to find user
 def findUser(user):
@@ -27,7 +29,6 @@ def findUser(user):
     r = data[0]['id']
     userObj = CustomUser.objects.filter(user_id = r).values('id')
     return userObj
-
 
 
 # Create your views here.
@@ -101,6 +102,10 @@ def cart(request):
     return render(request, 'cart.html', {'cart': cartdisp})
 
 #Customer
+def verifyTemp(request):
+    return render(request, 'verifymail.html')
+
+#Customer
 def orders(request):
     return render(request, 'orders.html')
 
@@ -160,13 +165,6 @@ def contactTemp(request):
     return render(request, 'contact.html')
 
 
-#Testing SMS
-# @csrf_exempt
-# @api_view(["POST"])
-# @permission_classes((AllowAny,))
-# def sendsms(request):
-#     message = SmsMessage(body='lolcats make me hungry', from_phone='+41791111111', to=['+919487011501'])
-#     message.send()
 
 #Token Issue
 @csrf_exempt
@@ -213,16 +211,21 @@ def sample_api(request):
 @permission_classes((AllowAny,))
 def signup(request):
     #Fetch data
-    username = request.data.get("username")
+    global usernameCustomer
+    global sixRandom
+    sixRandom = random.randint(111111,999999)
+    # global verifyUUID
+    # verifyUUID = str(uuid.uuid4())
+    usernameCustomer = request.data.get("username")
     password = request.data.get("password")
     name = request.data.get("firstname")
     phonenum = request.data.get("phonenum")
     data = {
         'user': 
             {
-                'username': username,
+                'username': usernameCustomer,
                 'password': password,
-                'email': username,
+                'email': usernameCustomer,
             },
         'first_name': name,
         'phone_number': phonenum,
@@ -230,7 +233,15 @@ def signup(request):
     #Fetch - Over
     serializer = CustomSerializer(data = data)
     if serializer.is_valid():
-        serializer.create(validated_data = data) 
+        serializer.create(validated_data = data)
+        # Send random number
+        subject = 'Verify your email address'
+        # mailmessage = "Click on this link to verify email address " + "http://127.0.0.1:8000/activate/"+ verifyUUID +"/"+ usernameCustomer  #use this to verify using email
+        mailmessage = "Your verification code is '" + str(sixRandom) + "'"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [usernameCustomer,]
+        send_mail( subject, mailmessage, email_from, recipient_list ) 
+        
         return Response (serializer.data, status=HTTP_200_OK)
         
     else:
@@ -346,14 +357,6 @@ def productreg(request):
             # return Response("none")
 
 
-# Get products from database to display
-# name = api-productdisp  
-# @csrf_exempt
-# @api_view(["POST"])
-# @permission_classes((AllowAny,))
-# def productdisp(request):
-#     disp = ProductsInfo.objects.all().values('nameofprod', 'price')
-#     return Response(disp)
     
 # Adding to cart
 @csrf_exempt
@@ -583,11 +586,59 @@ def wishlistdelete(request):
         messagee = WishlistInfo.objects.filter(products = prodname, customer_id = r).delete()
         return Response(messagee)
 
-# Testing
+
+# Two step verification using email
 @csrf_exempt
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes((AllowAny,))
-def datatest(request):
-    hi = request.data.get("FilterVar")
-    hello = "Hello " + str(hi)
-    return HttpResponse(hello)
+def verifyemail(request):
+    global sixRandom
+    global usernameCustomer
+    randomNum = request.data.get('randomNum')
+    randomNum = int(randomNum)
+    # typeofNym = type(randomNum)
+    if( randomNum == sixRandom):
+        userObj = get_object_or_404(User, username = usernameCustomer)
+        userObj.is_active = True
+        userObj.save()
+        return Response("Verified", status=HTTP_200_OK)
+
+    else:
+        return HttpResponse('Not Verified')
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def delemail(request):
+    global usernameCustomer
+    User.objects.filter(username = usernameCustomer).delete()
+    return Response("Deleted", status=HTTP_200_OK)
+
+
+# Activate using link
+# def activatemail(request):
+#     global usernameCustomer
+#     global verifyUUID
+#     newlink = request.get_full_path()
+#     getUUID = newlink.split('/').pop(2)
+#     getUser = newlink.split('/').pop(3) 
+#     if getUUID == verifyUUID:
+#         if usernameCustomer == getUser:
+#             userObj = get_object_or_404(User, username = usernameCustomer)
+#             userObj.is_active = True
+#             userObj.save()
+#             return render(request, 'verifycomplete.html')
+#     else:
+#         User.objects.filter(username = usernameCustomer).delete()
+#         return HttpResponse("Error", status=HTTP_400_BAD_REQUEST)
+
+
+# Testing
+# @csrf_exempt
+# @api_view(["GET"])
+# @permission_classes((AllowAny,))
+# def datatest(request):
+#     hi = request.data.get("FilterVar")
+#     hello = "Hello " + str(hi)
+#     return HttpResponse(hello)
+

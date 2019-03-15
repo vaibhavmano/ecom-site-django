@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Verify</title></head>
+    <body>
+        <center>
+        <h3>Verify mail</h3>
+        <!-- <h5>You'll be redirected.</h5> -->
+        <form>
+            <input id="random-num" type="number"/>
+            <button id="verify-email" type="submit">Verify</button>
+        </form>
+        </center>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            setTimeout(deleteMail, 60000)
+            $("#verify-email").click(function(e){
+                e.preventDefault();
+                // var randNum = 
+                // console.log(randomNum)
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'email-verify' %}",
+                    data: {
+                        "randomNum": $('#random-num').val(),
+                    },
+                    success: function(data, status) {
+                        // console.log(data)
+                        clearTimeout(deleteMail)
+                        alert("Account activated")
+                        window.location.replace("http://127.0.0.1:8000/login")
+                    },
+                    complete: function() {
+                        $('#random-num').val('')
+                    }
+                })
+            })
+            
+            function deleteMail() {
+                    $.ajax({
+                    type: "POST",
+                    url: "",
+                    success: function() {
+                        alert("Session expired! SignUp again")
+                        window.location.replace("http://127.0.0.1:8000/signup")
+                        console.log("deleted")
+                    }
+                })
+            }
+
+            // function redirectPage() {
+            //     window.location.replace("http://127.0.0.1:8000")
+            // }
+        })
+    </script>
+</html>

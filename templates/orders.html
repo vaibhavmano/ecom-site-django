@@ -21,9 +21,10 @@
                                 
                                 <tr class="table-head">
                                     <!-- <th class="column-1"></th> -->
-                                    <th class="column-2">S.No</th>
+                                    <th class="column-1">S.No</th>
                                     <th class="column-4">Orders</th>
                                     <th class="column-5">Total Price</th>
+                                    <th class="column-6">Order Status</th>
                                 </tr>
         
                                 
@@ -73,7 +74,16 @@
                             // console.log(data[0].fields)
                             $.each(data, function(k){
                                 s = k+1;
-                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-2'>" +s+ "</td><td class='column-4'>" +data[k].fields.products+ "</td><td class='column-5'>&#8377 <span id='quantity-cost'>"+ data[k].fields.totalprice +"</span></td></tr>")
+                                if (data[k].fields.orderstatus == 'NOTCNF') {
+                                    orStatus = "Not Confirmed"
+                                } else if (data[k].fields.orderstatus == 'CNFORM') {
+                                    orStatus = "Order Confirmed"
+                                } else if (data[k].fields.orderstatus == 'DSPATC') {
+                                    orStatus = "Order Dispatched"
+                                } else if (data[k].fields.orderstatus == 'DLIVER') {
+                                    orStatus = "Order Delivered"
+                                } 
+                                $('.table-shopping-cart').append("<tr class='table-row'><td class='column-1'>" +s+ "</td><td class='column-4'>" +data[k].fields.products+ "</td><td class='column-5'>&#8377 <span id='quantity-cost'>"+ data[k].fields.totalprice +"</span></td><td class='column-6'>"+ orStatus +"</td></tr>")
                             })
                         }
                     })
