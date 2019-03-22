@@ -4,6 +4,9 @@ from django.core.validators import RegexValidator
 import random
 # from djmoney.models.fields import MoneyField
 
+
+
+
 # Create your models here.
 # Uses email instead of username for validation!
 User.USERNAME_FIELD = 'email'
@@ -63,12 +66,18 @@ ORDER_STATUS = (
     ('DLIVER', 'Order Delivered'),
 )
 
+PAYMENT_STATUS = (
+    ('ACCEPTED', 'Accepted'),
+    ('PENDING', 'Pending'),
+    ('DECLINED', 'Declined')
+)
 class OrderInfo(models.Model):
     totalprice = models.PositiveIntegerField(default = 20)
     products = models.CharField(max_length = 200)
     customer = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
     orderstatus = models.CharField(default = 'NOTCNF', choices = ORDER_STATUS, max_length = 6)
-    # orderID = models.PositiveIntegerField()
+    paymentstatus = models.CharField(default = 'PENDING', choices = PAYMENT_STATUS, max_length = 9)
+    orderInvoiceNum = models.PositiveIntegerField(default = 000000)
 
     # def save(self, *args, **kwargs):
     #     self.orderID = str(random)
@@ -88,4 +97,5 @@ class SellerOrderInfo(models.Model):
     products = models.CharField(max_length = 200)
     seller = models.ForeignKey(CustomSeller, on_delete = models.CASCADE)
     customer = models.CharField(max_length = 75, default = "Anonymous")
+
 

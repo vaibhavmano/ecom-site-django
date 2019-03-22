@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls import url
 from . import views
 from rest_framework.authtoken.views import obtain_auth_token
@@ -52,5 +52,8 @@ urlpatterns = [
     # path('api/datatest', views.datatest, name='testing'), #Testing-------
 
     # path('api-token-auth/', obtain_auth_token, name='api-token-auth'), #Testing default token assign
+    url(r'notify-ppal', include('paypal.standard.ipn.urls')),
+    path('complete-payment/', views.payment_complete),
+    path('cancel-payment/', views.payment_cancel),
 
 ]

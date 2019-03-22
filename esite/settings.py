@@ -25,7 +25,8 @@ SECRET_KEY = '=yrx((=+#su!-n+x@2d(i5v1yzs0i+%um)@a^_*or6e8$*fw-g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fb6c4cdd.ngrok.io',]
+
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',       #DRF
     'mathfilters',
     'djmoney',
+    'paypal.standard.ipn',
     # 'djmoney.contrib.exchange',
 ]
 
@@ -152,3 +154,8 @@ EMAIL_HOST_PASSWORD = 'password'
 
 # Money exchange
 # EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
+
+# Paypal
+# PAYPAL_IDENTITY_TOKEN = "Dequ7-Oar4BP9tgcNieLx8QC2PH9fQtA9Gli9IvoIGgGI7jLzQm5CmtoRZu"
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'youremail@gmail.com'

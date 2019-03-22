@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.core import serializers #Convert to JSON
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRequest
 from rest_framework.parsers import JSONParser
@@ -22,6 +22,13 @@ from django.conf import settings
 from django.db.models import Q
 import random #Random number generator
 import uuid
+from django.urls import reverse
+from paypal.standard.forms import PayPalPaymentsForm
+from django.views.decorators.http import require_GET
+
+
+from paypal.standard.models import ST_PP_COMPLETED
+from paypal.standard.ipn.signals import valid_ipn_received
 
 # Function to find user
 def findUser(user):
@@ -128,7 +135,67 @@ def signupTemp(request):
 
 #Customer
 def paymentTemp(request):
-    return render(request, 'payment.html')
+    # orderObj = CartInfo.objects.all().values('nameofprod')
+    global orderinvoice
+    amount = OrderInfo.objects.filter(orderInvoiceNum = orderinvoice).values("totalprice")
+    paypal_dict = {
+        "business": "youremail@gmail.com",
+        "amount": amount[0]['totalprice'],
+        "item_name": "ECOMMERCE",
+        "invoice": orderinvoice,
+        "currency_code": 'INR',
+        "hosted_button_id": 'TPAEKT6HW6B4Q',
+        "notify_url": "https://fb6c4cdd.ngrok.io/notify-ppal",
+        "return": "https://fb6c4cdd.ngrok.io/complete-payment",  #complete-payment",
+        "cancel_return": "https://fb6c4cdd.ngrok.io/cancel-payment",
+        # "custom": "premium_plan",  # Custom command to correlate to some function later (optional)
+    }
+
+    # Create the instance.
+    paypalform = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": paypalform}
+    return render(request, "payment.html", context)
+
+
+
+# -------------
+def show_me_the_money(sender, **kwargs):
+    ipn_obj = sender
+    global orderinvoice
+    # if ipn_obj.payment_status == ST_PP_COMPLETED:
+        
+    if ipn_obj.receiver_email != "youremail@gmail.com":
+            orderObj = get_object_or_404(OrderInfo, orderInvoiceNum = orderinvoice)
+            orderObj.paymentstatus = "DECLINED"
+            orderObj.save()
+            print("Declined")
+            # return
+        
+    else:
+        # if ipn_obj.payment_status == 'Completed':            
+        orderObj = get_object_or_404(OrderInfo, orderInvoiceNum = orderinvoice)
+        orderObj.paymentstatus = "ACCEPTED"
+        orderObj.save()
+            # print("Accepted")
+        print("Accepted")
+        
+
+valid_ipn_received.connect(show_me_the_money)
+
+# -------------
+
+
+@csrf_exempt
+def payment_complete(request):
+    args = {'POST': request.POST, 'GET': request.GET}
+    return render_to_response('complete-payment.html', args)
+
+
+@csrf_exempt
+def payment_cancel(request):
+    args = {'POST': request.POST, 'GET': request.GET}
+    return render_to_response('cancel-payment.html', args)
+
 
 #Seller
 def sellerLoginTemp(request):
@@ -399,10 +466,13 @@ def orderinsert(request):
         return HttpResponse("Not Found")
     else:
         userObj = userObj[0]['id']
+        global orderinvoice
+        orderinvoice = random.randint(111111,999999)
         data = {
             'totalprice': totalprice,
             'products': cartData,
-            'customer': userObj
+            'customer': userObj,
+            'orderInvoiceNum': orderinvoice,
         }
 
 
